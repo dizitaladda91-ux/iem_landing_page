@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -218,6 +219,8 @@ export default function Footer() {
             <a href="#rules" className="hover:text-pink-primary">Guidelines</a>
             <span>&bull;</span>
             <a href="#voting" className="hover:text-pink-primary">Fair Play Policy</a>
+            <span>&bull;</span>
+            <Link href="/portal.submit" className="hover:text-pink-primary">Admin Portal</Link>
             <span>&bull;</span>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLScLhiYtE6aWKlI-T3tou7OzfVQVucW4uxHgf8Q7P5bLI4JKLw/viewform"

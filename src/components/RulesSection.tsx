@@ -8,15 +8,15 @@ export default function RulesSection() {
   const faqs = [
     {
       q: "Is there any registration fee for the nomination?",
-      a: "Initial nominations are completely free of charge. Parents can submit their child's details online or at official school connect & mall desks without any registration cost.",
+      a: "Initial nominations are completely free of charge. Parents can submit their child's details online till 14th November without any registration cost.",
     },
     {
-      q: "What happens during the 1st Mega Audition on 01st November at Jashn Realty?",
-      a: "The audition is designed to be child-friendly, playful, and comfortable. Trainers evaluate basic ramp presence, smiles, and self-introduction. It is an encouraging shortlisting round, not a stressful elimination.",
+      q: "What happens during the Mega Auditions on 22nd November at Jashn Realty & GD Goenka?",
+      a: "The audition is designed to be child-friendly, playful, and comfortable. Batch assembly is at GD Goenka, followed by on-ground screening at Jashn Realty. Trainers evaluate basic ramp presence, smiles, and self-introduction. It is an encouraging shortlisting round, not a stressful elimination.",
     },
     {
       q: "How does the Social Media Wild Card Voting work?",
-      a: "After you register, our media team generates an official participant creative. When posted online, the top 2 participants per category with the highest organic engagement (Likes + Comments + Shares) receive direct entry into the Grand Finale without an audition.",
+      a: "After you register, our media team generates an official participant creative. When supporters vote with their phone or email, participants with top engagement earn direct wild card nomination into the Grand Finale!",
     },
     {
       q: "Are parents allowed to accompany children backstage and on the runway?",
@@ -39,14 +39,14 @@ export default function RulesSection() {
     {
       title: "Rehearsals & Workshops",
       points: [
-        "Attendance in grooming sessions and choreography practice is mandatory for finalists.",
+        "Attendance in grooming sessions (26-27 Nov) and makeup guidance (28 Nov) is mandatory for finalists.",
         "Punctuality is expected to ensure each child receives dedicated trainer time.",
       ],
     },
     {
       title: "Event Day Protocols",
       points: [
-        "Participants must report on schedule and wear their official ID badge at all times.",
+        "Participants must report on schedule on 22nd Nov for Mega Auditions and wear their official ID badge.",
         "Green room access is reserved for registered kids and official styling crew.",
       ],
     },
@@ -72,7 +72,7 @@ export default function RulesSection() {
             Official Rules &amp; Parent FAQs
           </h2>
           <p className="mt-2 text-sm sm:text-base text-charcoal-muted leading-relaxed">
-            Essential information regarding costumes, rehearsals, documents, and event day decorum to ensure every young participant shines in a safe, celebratory setting.
+            Essential information regarding costumes, auditions on 22nd Nov, rehearsals, documents, and event day decorum to ensure every young participant shines in a safe, celebratory setting.
           </p>
         </div>
 
@@ -124,7 +124,7 @@ export default function RulesSection() {
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : fIdx)}
-                    className="w-full p-5 text-left flex justify-between items-center bg-surface hover:bg-pink-soft transition-colors"
+                    className="w-full p-5 text-left flex justify-between items-center bg-surface hover:bg-pink-soft transition-colors cursor-pointer"
                   >
                     <span className="text-xs sm:text-sm font-bold text-charcoal pr-4">
                       {faq.q}

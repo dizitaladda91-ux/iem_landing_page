@@ -61,7 +61,7 @@ export default function RegistrationFormSection() {
     <section id="register" className="py-20 bg-white border-b border-border-pink relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Header - Clean & Direct, No Confusing Option Buttons */}
+        {/* Section Header - Clean & Direct */}
         <div className="max-w-3xl mb-10">
           <div className="inline-block px-3 py-1 bg-surface text-pink-dark border border-border-pink text-xs font-bold uppercase tracking-wider rounded mb-3">
             JASHN REALTY PRESENTS &bull; CONTESTANT NOMINATION
@@ -70,7 +70,7 @@ export default function RegistrationFormSection() {
             Register Child &amp; Official Nomination
           </h2>
           <p className="mt-2 text-sm sm:text-base text-charcoal-muted leading-relaxed">
-            Complete your official entry for <strong className="text-pink-primary font-semibold">Jashn Realty Presents Runway Kids Fashion Week 2026</strong> directly below. Free entry for all age categories!
+            Complete your official entry for <strong className="text-pink-primary font-semibold">Jashn Realty Presents Runway Kids Fashion Week 2026</strong> directly below. Free entry for all age categories till 14th November!
           </p>
         </div>
 
@@ -82,10 +82,10 @@ export default function RegistrationFormSection() {
               <div className="flex items-center justify-between pb-3 mb-3 border-b border-border-pink text-xs text-charcoal-muted">
                 <span className="font-bold text-pink-primary uppercase tracking-wider flex items-center gap-2">
                   <span className="w-2 h-2 rounded-full bg-pink-primary animate-pulse" />
-                  LIVE REGISTRATION FORM &bull; FREE ENTRY
+                  LIVE REGISTRATION FORM &bull; FREE ENTRY TILL 14 NOV
                 </span>
                 <span className="text-[11px] hidden sm:inline">
-                  1st Mega Audition: 01 Nov 2026 @ Jashn Realty
+                  Mega Auditions: 22 Nov 2026 @ Jashn Realty &amp; GD Goenka
                 </span>
               </div>
 
@@ -118,7 +118,7 @@ export default function RegistrationFormSection() {
                     setIsFormSubmitted(true);
                     triggerCelebration();
                   }}
-                  className="shrink-0 px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-white bg-[#2e2c75] hover:bg-[#1f1d53] rounded-lg shadow-md transition-all active:scale-95 flex items-center gap-2"
+                  className="shrink-0 px-6 py-3 text-xs font-extrabold uppercase tracking-widest text-white bg-[#2e2c75] hover:bg-[#1f1d53] rounded-lg shadow-md transition-all active:scale-95 flex items-center gap-2 cursor-pointer"
                 >
                   <span>I Have Submitted Form &rarr;</span>
                 </button>
@@ -223,7 +223,7 @@ export default function RegistrationFormSection() {
                     href="https://shorturl.at/iefKV"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-full sm:w-auto px-6 py-3 text-center text-xs font-black uppercase tracking-widest text-[#112266] bg-gold hover:bg-[#F6E29C] rounded-lg shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-6 py-3 text-center text-xs font-black uppercase tracking-widest text-[#112266] bg-gold hover:bg-[#F6E29C] rounded-lg shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Claim Festive Offers</span>
                     <span>&rarr;</span>
@@ -239,8 +239,8 @@ export default function RegistrationFormSection() {
               {/* Audition Details & Actions */}
               <div className="mt-8 pt-6 border-t border-border-pink flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-charcoal-muted">
                 <div className="text-center sm:text-left">
-                  <span className="font-bold text-charcoal block">1st Mega Audition &amp; Screening:</span>
-                  <span>01 Nov 2026 @ Jashn Realty, Lucknow</span>
+                  <span className="font-bold text-charcoal block">Mega Auditions &amp; Screening:</span>
+                  <span>22 Nov 2026 @ Jashn Realty &amp; GD Goenka Public School</span>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">
@@ -260,7 +260,7 @@ export default function RegistrationFormSection() {
                       setIframeLoadCount(0);
                       setIsFormSubmitted(false);
                     }}
-                    className="px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-charcoal bg-surface border border-border-pink hover:bg-white rounded-lg transition-colors"
+                    className="px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-charcoal bg-surface border border-border-pink hover:bg-white rounded-lg transition-colors cursor-pointer"
                   >
                     Submit Another Entry
                   </button>

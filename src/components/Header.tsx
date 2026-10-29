@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -25,11 +26,11 @@ export default function Header() {
                 JASHN REALTY &bull; LUCKNOW 2026
               </span>
               <span className="text-xs sm:text-xs font-bold uppercase tracking-wider text-pink-dark">
-                JASHN REALTY PRESENTS RUNWAY KIDS FASHION WEEK 2026 — OFFICIAL REGISTRATIONS &amp; SOCIAL VOTING OPEN — GRAND FINALE DATE ANNOUNCING SOON
+                JASHN REALTY PRESENTS RUNWAY KIDS FASHION WEEK 2026 — OFFICIAL REGISTRATIONS &amp; SOCIAL VOTING OPEN
               </span>
               <span className="mx-5 text-pink-primary font-black text-sm">&bull;</span>
               <span className="text-xs sm:text-xs font-bold uppercase tracking-wider text-charcoal">
-                FREE NOMINATION (20–31 OCT) &bull; 1ST AUDITION @ JASHN REALTY (01 NOV) &bull; CASH PRIZE ₹11,000 WITH GIFT HAMPER
+                NOMINATIONS OPEN TILL 14 NOV &bull; MEGA AUDITIONS @ GD GOENKA &amp; JASHN REALTY (22 NOV) &bull; PROPOSED FINALE (29 NOV) &bull; CASH PRIZE ₹11,000 WITH GIFT HAMPER
               </span>
               <span className="mx-5 text-pink-primary font-black text-sm">&bull;</span>
             </div>
@@ -42,7 +43,7 @@ export default function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-4 xl:gap-8 h-16 sm:h-20">
           {/* Brand Logo & Titles - Strict Typography, No Icons */}
-          <a href="#" className="flex flex-col group shrink-0">
+          <Link href="/" className="flex flex-col group shrink-0">
             <span className="text-[9px] sm:text-[10px] font-black tracking-[0.14em] text-charcoal uppercase leading-none whitespace-nowrap mb-0.5">
               Jashn <span className="text-gold-dark">|</span> Realty Presents
             </span>
@@ -52,7 +53,7 @@ export default function Header() {
             <span className="text-[9px] sm:text-[10px] font-extrabold tracking-[0.1em] text-gold-dark uppercase leading-tight mt-0.5 whitespace-nowrap">
               Kids Fashion Week 2026
             </span>
-          </a>
+          </Link>
 
           {/* Desktop Nav Links */}
           <nav className="hidden lg:flex items-center gap-3.5 xl:gap-6">
@@ -62,6 +63,12 @@ export default function Header() {
             >
               <span className="w-1.5 h-1.5 rounded-full bg-gold" />
               Bareilly Highlights
+            </a>
+            <a
+              href="#schedule"
+              className="text-[11px] xl:text-xs font-bold text-charcoal hover:text-pink-primary uppercase tracking-wider whitespace-nowrap transition-colors"
+            >
+              Event Flow
             </a>
             <a
               href="#overview"
@@ -74,12 +81,6 @@ export default function Header() {
               className="text-[11px] xl:text-xs font-bold text-charcoal hover:text-pink-primary uppercase tracking-wider whitespace-nowrap transition-colors"
             >
               Categories
-            </a>
-            <a
-              href="#schedule"
-              className="text-[11px] xl:text-xs font-bold text-charcoal hover:text-pink-primary uppercase tracking-wider whitespace-nowrap transition-colors"
-            >
-              Event Flow
             </a>
             <a
               href="#voting"
@@ -102,18 +103,24 @@ export default function Header() {
           </nav>
 
           {/* Action CTAs */}
-          <div className="hidden md:flex items-center gap-2.5 xl:gap-3 shrink-0">
+          <div className="hidden md:flex items-center gap-2 xl:gap-2.5 shrink-0">
             <a
               href="#voting"
-              className="px-3.5 xl:px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-pink-primary bg-surface border border-gold hover:bg-pink-soft transition-all rounded-md whitespace-nowrap shadow-sm"
+              className="px-3 xl:px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-wider text-pink-primary bg-surface border border-gold hover:bg-pink-soft transition-all rounded-md whitespace-nowrap shadow-sm"
             >
               View Voting
             </a>
+            <Link
+              href="/portal.submit"
+              className="px-3 xl:px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-wider text-charcoal bg-white border border-border-pink hover:bg-surface transition-all rounded-md whitespace-nowrap shadow-2xs"
+            >
+              Admin Portal
+            </Link>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLScLhiYtE6aWKlI-T3tou7OzfVQVucW4uxHgf8Q7P5bLI4JKLw/viewform"
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 xl:px-5 py-2 text-[11px] font-extrabold uppercase tracking-wider text-white bg-pink-primary border border-pink-primary hover:bg-pink-dark transition-all rounded-md shadow-sm whitespace-nowrap"
+              className="px-3.5 xl:px-4 py-2 text-[11px] font-extrabold uppercase tracking-wider text-white bg-pink-primary border border-pink-primary hover:bg-pink-dark transition-all rounded-md shadow-sm whitespace-nowrap"
             >
               Nominate Child
             </a>
@@ -146,6 +153,28 @@ export default function Header() {
             <span className="text-[10px] bg-gold/20 text-navy font-extrabold px-2 py-0.5 rounded-full border border-gold/40">Proof</span>
           </a>
           <a
+            href="#schedule"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-bold text-charcoal py-2 border-b border-border-pink uppercase tracking-wider"
+          >
+            Event Flow (14–29 Nov)
+          </a>
+          <a
+            href="#voting"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block text-sm font-bold text-charcoal py-2 border-b border-border-pink uppercase tracking-wider"
+          >
+            Wild Card Voting
+          </a>
+          <Link
+            href="/portal.submit"
+            onClick={() => setMobileMenuOpen(false)}
+            className="flex items-center justify-between text-sm font-bold text-pink-primary py-2 border-b border-border-pink uppercase tracking-wider"
+          >
+            <span>Admin Portal (Cards &amp; Leads)</span>
+            <span className="text-[10px] bg-pink-primary text-white font-extrabold px-2 py-0.5 rounded-full">Login</span>
+          </Link>
+          <a
             href="#overview"
             onClick={() => setMobileMenuOpen(false)}
             className="block text-sm font-bold text-charcoal py-2 border-b border-border-pink uppercase tracking-wider"
@@ -158,20 +187,6 @@ export default function Header() {
             className="block text-sm font-bold text-charcoal py-2 border-b border-border-pink uppercase tracking-wider"
           >
             Categories
-          </a>
-          <a
-            href="#schedule"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-bold text-charcoal py-2 border-b border-border-pink uppercase tracking-wider"
-          >
-            Event Flow
-          </a>
-          <a
-            href="#voting"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block text-sm font-bold text-charcoal py-2 border-b border-border-pink uppercase tracking-wider"
-          >
-            Wild Card Voting
           </a>
           <a
             href="#wheels"
