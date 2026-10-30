@@ -5,22 +5,6 @@ import React, { useEffect, useRef, useState } from "react";
 
 const slides = [
   {
-    id: 1,
-    image: "/images/bareilly-grand-stage.jpg",
-    alt: "Grand runway stage setup at Phoenix United Mall Bareilly",
-    step: "01",
-    tag: "CONCERT-GRADE SETUP",
-    title: "Official Grand Runway Stage in Mall Atrium",
-    subtitle: "Real Glimpses from Phoenix United, Bareilly",
-    desc: "A massive multi-level runway stage built inside the central atrium of Phoenix United with concert-grade sound towers, live rock band instruments, LED screens, and international runway specifications.",
-    highlights: [
-      "Concert-Grade Acoustic Sound & Lights",
-      "Full Atrium Multi-Level Runway Ramp",
-      "Live Musical Performance Stage Setup",
-    ],
-    venue: "Phoenix United, Bareilly",
-  },
-  {
     id: 2,
     image: "/images/bareilly-massive-crowd.jpg",
     alt: "Massive packed house audience cheering at Phoenix United Bareilly",
@@ -209,7 +193,7 @@ export default function HeroGalleryCarousel() {
                 <div className="flex items-center gap-2">
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gold/70 rounded-full text-[10px] sm:text-xs font-black uppercase tracking-wider text-pink-primary shadow-2xs">
                     <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-                    <span>📍 {currentSlide.venue}</span>
+                    <span> {currentSlide.venue}</span>
                   </span>
                   <span className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-gold-dark bg-surface-card border border-border-pink px-2.5 py-1 rounded-full">
                     {currentSlide.tag}
