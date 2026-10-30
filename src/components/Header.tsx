@@ -110,12 +110,6 @@ export default function Header() {
             >
               View Voting
             </a>
-            <Link
-              href="/portal.submit"
-              className="px-3 xl:px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-wider text-charcoal bg-white border border-border-pink hover:bg-surface transition-all rounded-md whitespace-nowrap shadow-2xs"
-            >
-              Admin Portal
-            </Link>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLScLhiYtE6aWKlI-T3tou7OzfVQVucW4uxHgf8Q7P5bLI4JKLw/viewform"
               target="_blank"
