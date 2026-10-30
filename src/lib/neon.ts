@@ -119,6 +119,7 @@ export async function initNeonDatabase(): Promise<boolean> {
         is_active BOOLEAN DEFAULT TRUE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
+      CREATE INDEX IF NOT EXISTS idx_candidates_active_votes ON candidates(is_active, votes DESC);
     `);
 
     // Create vote_records table
@@ -134,6 +135,9 @@ export async function initNeonDatabase(): Promise<boolean> {
         ip VARCHAR(100),
         timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
+      CREATE INDEX IF NOT EXISTS idx_vote_contestant ON vote_records(contestant_id);
+      CREATE INDEX IF NOT EXISTS idx_vote_voter_phone ON vote_records(voter_phone);
+      CREATE INDEX IF NOT EXISTS idx_vote_voter_email ON vote_records(voter_email);
     `);
 
     // Create audit_logs table
@@ -148,6 +152,7 @@ export async function initNeonDatabase(): Promise<boolean> {
         details TEXT,
         ip VARCHAR(100)
       );
+      CREATE INDEX IF NOT EXISTS idx_audit_logs_timestamp ON audit_logs(timestamp DESC);
     `);
 
     // Create revoked_tokens table (for immediate session end on logout)
@@ -157,32 +162,8 @@ export async function initNeonDatabase(): Promise<boolean> {
         exp BIGINT NOT NULL,
         revoked_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
+      CREATE INDEX IF NOT EXISTS idx_revoked_exp ON revoked_tokens(exp);
     `);
-
-    // Check if candidates table is empty; if so, seed initial contestants
-    const existing = await queryNeon(`SELECT COUNT(*) as count FROM candidates;`);
-    const count = parseInt(existing[0]?.count || "0", 10);
-
-    if (count === 0) {
-      const seedSql = `
-        INSERT INTO candidates (id, name, age, category, city, image_url, badge, bio, votes, likes, shares, is_active)
-        VALUES 
-        ('KFW-101', 'Aarav Sharma', '1.5 Years', 'Walk with Mom / Dad (Newborn)', 'Gomti Nagar, Lucknow', '/images/bareilly-doctor-kid.jpg', 'WILD CARD CONTENDER', 'Full of smiles and adorable runway charisma!', 842, 520, 322, true),
-        ('KFW-102', 'Ananya Verma', 'Class 2 (7 Yrs)', 'Independent Solo Ramp Walk', 'Indira Nagar, Lucknow', '/images/bareilly-solo-girl.jpg', 'TRENDING IN VOTING', 'Natural poise, confidence, and expressive stage presence.', 960, 610, 350, true),
-        ('KFW-103', 'Reyansh Gupta', 'Class 4 (9 Yrs)', 'Groomed Fashion Walk', 'Hazratganj, Lucknow', '/images/bareilly-traditional-walk.jpg', 'STAGE NOMINEE', 'Passionate about ethnic designer fashion and runway style.', 720, 440, 280, true),
-        ('KFW-104', 'Kabir & Father', 'Class 3 Duo', 'Sporty Walk with Dad', 'Aliganj, Lucknow', '/images/bareilly-rampwalk-mom-son.jpg', 'POPULAR DUO', 'Energetic parent-child duo ready to rock the sports round.', 890, 560, 330, true),
-        ('KFW-105', 'Meera Singhania', '5 Years (UKG)', 'Walk with Mom / Dad (Newborn)', 'Mahanagar, Lucknow', '/images/category-1.jpg', 'AUDIENCE FAVORITE', 'Charming smile that captured hearts during school screening.', 815, 495, 320, true),
-        ('KFW-106', 'Vivaan Malhotra', 'Class 6 (11 Yrs)', 'Groomed Fashion Walk', 'Jankipuram, Lucknow', '/images/category-3.jpg', 'RUNWAY STAR', 'Smart, articulate, and passionate about public performance.', 780, 470, 310, true)
-        ON CONFLICT (id) DO NOTHING;
-      `;
-      await queryNeon(seedSql);
-
-      // Seed initial log
-      await queryNeon(`
-        INSERT INTO audit_logs (id, action, category, username, description, details)
-        VALUES ('LOG-NEON-INIT', 'SECURITY_ALERT', 'SECURITY', 'System', 'Neon Postgres Database initialized and synchronized with official contestants roster.', 'SSL Mode: require');
-      `);
-    }
 
     // Populate in-memory revoked tokens cache from Neon
     const revoked = await queryNeon(`SELECT jti FROM revoked_tokens WHERE exp > $1;`, [

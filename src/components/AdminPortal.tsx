@@ -1172,19 +1172,42 @@ export default function AdminPortal() {
               ))}
             </div>
 
-            {filteredCandidates.length === 0 && (
+            {candidates.length === 0 ? (
+              <div className="bg-white p-12 sm:p-16 rounded-3xl border border-border-pink text-center space-y-4 max-w-md mx-auto my-6">
+                <div className="w-16 h-16 bg-pink-soft text-pink-primary rounded-3xl flex items-center justify-center mx-auto text-2xl font-bold">
+                  🌟
+                </div>
+                <div>
+                  <h4 className="font-serif text-xl font-bold text-charcoal">
+                    No Contestants Added Yet
+                  </h4>
+                  <p className="text-xs sm:text-sm text-charcoal-muted mt-1">
+                    Your database is completely fresh and clean! Add contestant cards here to publish them live onto the public voting section.
+                  </p>
+                </div>
+                <button
+                  onClick={openAddModal}
+                  className="px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-wider text-white bg-pink-primary hover:bg-pink-dark transition shadow-sm cursor-pointer"
+                >
+                  + Add First Contestant Card
+                </button>
+              </div>
+            ) : filteredCandidates.length === 0 ? (
               <div className="bg-white p-12 rounded-3xl border border-border-pink text-center space-y-3">
                 <p className="text-sm font-semibold text-charcoal-muted">
                   No contestants match your search criteria.
                 </p>
                 <button
-                  onClick={openAddModal}
-                  className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-pink-primary"
+                  onClick={() => {
+                    setCandidateSearch("");
+                    setCandidateCategoryFilter("ALL");
+                  }}
+                  className="px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider text-charcoal bg-surface hover:bg-pink-soft border border-border-pink"
                 >
-                  Add First Contestant Now
+                  Clear Filters
                 </button>
               </div>
-            )}
+            ) : null}
           </div>
         )}
 

@@ -445,13 +445,38 @@ export default function WildCardVotingSection() {
                 Loading Contestants Roster...
               </p>
             </div>
+          ) : contestants.length === 0 ? (
+            <div className="py-16 px-4 text-center max-w-lg mx-auto space-y-4">
+              <div className="w-16 h-16 bg-pink-soft text-pink-primary rounded-3xl flex items-center justify-center mx-auto text-2xl font-bold shadow-xs">
+                🌟
+              </div>
+              <div>
+                <h4 className="font-serif text-xl font-bold text-charcoal">
+                  No Contestants Published Yet
+                </h4>
+                <p className="text-xs sm:text-sm text-charcoal-muted mt-1 leading-relaxed">
+                  Contestant cards posted from the Admin Portal or submitted via Parent Nomination will appear here live with verified voting.
+                </p>
+              </div>
+              <div className="pt-2 flex flex-wrap items-center justify-center gap-3">
+                <button
+                  onClick={() => {
+                    setNominateError(null);
+                    setIsNominateModalOpen(true);
+                  }}
+                  className="px-6 py-2.5 text-xs font-black uppercase tracking-wider bg-pink-primary text-white rounded-full hover:bg-pink-dark transition shadow-sm cursor-pointer"
+                >
+                  + Nominate Your Child for Voting
+                </button>
+              </div>
+            </div>
           ) : filteredContestants.length === 0 ? (
             <div className="py-14 text-center">
               <div className="w-12 h-12 bg-pink-soft text-pink-primary rounded-full flex items-center justify-center mx-auto mb-3 text-lg font-bold">
                 🔍
               </div>
               <p className="text-sm font-bold text-charcoal">
-                No contestants match your search query.
+                No contestants match your search query &ldquo;{searchQuery}&rdquo;.
               </p>
               <p className="text-xs text-charcoal-muted mt-1">
                 Can&apos;t find your child? Nominate them directly below!

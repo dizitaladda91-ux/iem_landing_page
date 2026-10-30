@@ -82,7 +82,7 @@ const sponsors = [
   },
   {
     role: "Supporting Partner",
-    name: "Cafe Nutri",
+    name: "Nutri Max",
     sub: "Health & Nutrition",
     badgeColor: "bg-[#8D7B38] text-white border-[#A8946C]",
     nameColor: "text-[#73632A]",
