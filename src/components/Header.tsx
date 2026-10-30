@@ -166,14 +166,7 @@ export default function Header() {
           >
             Wild Card Voting
           </a>
-          <Link
-            href="/portal.submit"
-            onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center justify-between text-sm font-bold text-pink-primary py-2 border-b border-border-pink uppercase tracking-wider"
-          >
-            <span>Admin Portal (Cards &amp; Leads)</span>
-            <span className="text-[10px] bg-pink-primary text-white font-extrabold px-2 py-0.5 rounded-full">Login</span>
-          </Link>
+          
           <a
             href="#overview"
             onClick={() => setMobileMenuOpen(false)}
