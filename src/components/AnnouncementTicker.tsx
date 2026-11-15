@@ -25,11 +25,25 @@ const sponsors = [
     nameColor: "text-[#102A6B]",
   },
   {
+    role: "Co-Powered By",
+    name: "AJB Fine Jewels",
+    sub: "Luxury Jewellery",
+    badgeColor: "bg-[#F4E5C8] text-[#3B2F2A] border-[#D3B77A]",
+    nameColor: "text-[#3B2F2A]",
+  },
+  {
     role: "Hospitality Partner",
     name: "The Centrum",
     sub: "Lucknow • Hotel | Resort | Convention",
     badgeColor: "bg-[#8C7853] text-white border-[#A8946C]",
     nameColor: "text-[#6B5A39]",
+  },
+  {
+    role: "Media & Knowledge Partner",
+    name: "Amrut Vichar",
+    sub: "News & Media",
+    badgeColor: "bg-[#0C2D49] text-[#F5F1E8] border-[#C4A35A]",
+    nameColor: "text-[#0C2D49]",
   },
   {
     role: "Associate Partner",
@@ -116,7 +130,7 @@ const sponsors = [
     nameColor: "text-[#0A1440]",
   },
   {
-    role: "Proposed Finale",
+    role: "Grand Finale",
     name: "29th Nov 2026",
     sub: "The Centrum, Lucknow",
     badgeColor: "bg-[#0A1440] text-gold border-gold",

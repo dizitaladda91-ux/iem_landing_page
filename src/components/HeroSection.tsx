@@ -206,7 +206,7 @@ export default function HeroSection() {
                     03
                   </span>
                   <div className="text-xs text-charcoal leading-tight">
-                    <strong className="font-bold">Proposed Grand Finale (29 Nov):</strong> Finalist runway showcase @ The Centrum Lucknow.
+                    <strong className="font-bold">Grand Finale (29 Nov):</strong> Finalist runway showcase @ The Centrum Lucknow.
                   </div>
                 </div>
               </div>

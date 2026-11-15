@@ -69,12 +69,12 @@ const steps: ScheduleStep[] = [
   },
   {
     step: "07",
-    date: "29TH NOV. 2026 (PROPOSED)",
-    title: "Proposed GRAND FINALE: Walk | Create | Shine",
-    location: "The Centrum, Lucknow (Proposed)",
+    date: "29TH NOV. 2026",
+    title: "GRAND FINALE: Walk | Create | Shine",
+    location: "The Centrum, Lucknow",
     description:
       "The ultimate celebration! Finalist kids take the grand runway before a celebrity jury, VIP guests, brand leaders, and media cameras.",
-    tags: ["29 NOV PROPOSED", "GRAND FINALE", "WALK CREATE SHINE"],
+    tags: ["29 NOV", "GRAND FINALE", "WALK CREATE SHINE"],
   },
 ];
 
