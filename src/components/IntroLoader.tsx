@@ -111,7 +111,7 @@ export default function IntroLoader() {
           <div className="intro-image-drop relative flex flex-col items-center justify-center max-w-[94vw] max-h-[84dvh]">
             <div className="relative rounded-2xl overflow-hidden border-2 border-gold/70 shadow-[0_25px_60px_-15px_rgba(17,34,102,0.45)] bg-white">
               <Image
-                src="/images/runway-poster.png"
+                src="/images/newposter.jpg"
                 alt="Jashn Realty Presents Runway Kids Fashion Week Official Poster"
                 width={1024}
                 height={714}
