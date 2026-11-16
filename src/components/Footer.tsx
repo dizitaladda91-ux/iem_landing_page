@@ -203,7 +203,7 @@ export default function Footer() {
                 Steppingstone
               </span>
               <span className="text-xs font-bold text-[#73632A] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
-                Cafe Nutri
+                Nutri Mix
               </span>
               <span className="text-xs font-bold text-[#0B63C5] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
                 AdOnMo+
