@@ -792,7 +792,7 @@ export default function AdminPortal() {
           <div className="bg-white py-8 px-6 sm:px-10 rounded-3xl border border-border-pink shadow-lg space-y-6">
             <div className="bg-pink-soft/40 border border-border-pink rounded-xl p-3.5 text-xs text-charcoal leading-relaxed">
               <strong className="block font-bold text-pink-primary mb-1">🔐 System Access</strong>
-              Credentials are authenticated against your <code className="bg-white px-1 py-0.5 rounded text-[11px] font-mono">.env.local</code> (Default: <code className="font-mono">admin</code> / <code className="font-mono">jashn@runway2026</code>).
+              Credentials are securely authenticated against your <code className="bg-white px-1 py-0.5 rounded text-[11px] font-mono">.env</code> configuration.
             </div>
 
             {loginError && (
