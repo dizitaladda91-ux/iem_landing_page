@@ -521,7 +521,7 @@ export default function WildCardVotingSection() {
                     </div>
 
                     {/* Photo Card with Real Image */}
-                    <div className="relative aspect-4/3 w-full rounded-xl overflow-hidden bg-slate-900 mb-3 border border-border-pink group-hover:border-gold transition-colors">
+                    <div className="relative aspect-[4/3] w-full rounded-xl overflow-hidden bg-slate-900 mb-3 border border-border-pink group-hover:border-gold transition-colors">
                       <Image
                         src={child.imageUrl || "/images/category-1.jpg"}
                         alt={child.name}

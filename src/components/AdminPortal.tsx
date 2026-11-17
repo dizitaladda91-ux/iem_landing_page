@@ -1090,7 +1090,7 @@ export default function AdminPortal() {
                   } shadow-xs overflow-hidden flex flex-col justify-between transition hover:shadow-md`}
                 >
                   <div>
-                    <div className="relative aspect-4/3 w-full bg-pink-soft/30 overflow-hidden">
+                    <div className="relative aspect-[4/3] w-full bg-pink-soft/30 overflow-hidden">
                       <Image
                         src={c.imageUrl || SAMPLE_AVATARS[0].url}
                         alt={c.name}
