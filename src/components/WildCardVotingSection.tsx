@@ -527,7 +527,7 @@ export default function WildCardVotingSection() {
                         alt={child.name}
                         fill
                         sizes="(max-width: 768px) 100vw, 320px"
-                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="object-contain"
                       />
                       <div className="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
                         <span className="text-xs font-bold text-white block truncate">

@@ -1095,7 +1095,7 @@ export default function AdminPortal() {
                         src={c.imageUrl || SAMPLE_AVATARS[0].url}
                         alt={c.name}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                       />
                       <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider text-charcoal shadow-xs">
                         {c.id}
@@ -1564,7 +1564,7 @@ export default function AdminPortal() {
                       src={candidateForm.imageUrl || SAMPLE_AVATARS[0].url}
                       alt="Preview"
                       fill
-                      className="object-cover"
+                      className="object-contain"
                     />
                   </div>
 
