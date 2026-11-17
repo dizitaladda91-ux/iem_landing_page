@@ -31,17 +31,17 @@ export default function Home() {
       {/* 3B. Sticky Scroll Pinned Showcase: Real Glimpses from Phoenix United, Bareilly */}
       <HeroGalleryCarousel />
 
-      {/* 4. Event Overview & 4 Core Pillars */}
+      {/* 4. Social Media Wild Card Voting & Live Nominees Board */}
+      <WildCardVotingSection />
+
+      {/* 5. Event Overview & 4 Core Pillars */}
       <OverviewSection />
 
-      {/* 5. Age & Ramp Walk Categories */}
+      {/* 6. Age & Ramp Walk Categories */}
       <CategoriesSection />
 
-      {/* 6. Chronological Schedule & Flow (Oct to Nov) */}
+      {/* 7. Chronological Schedule & Flow (Oct to Nov) */}
       <ScheduleFlowSection />
-
-      {/* 7. Social Media Wild Card Voting & Live Nominees Board */}
-      <WildCardVotingSection />
 
       {/* 8. Signature Attraction: Fashion on Wheels Tour */}
       <FashionOnWheelsSection />
