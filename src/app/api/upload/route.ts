@@ -26,7 +26,9 @@ export async function POST(req: NextRequest) {
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
-    // 1. If Cloudinary credentials are configured, upload to Cloudinary!
+    let cloudinaryError: string | null = null;
+
+    // 1. Upload to Cloudinary when credentials or an unsigned preset are configured.
     if (cloudName && ((apiKey && apiSecret) || uploadPreset)) {
       try {
         const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
@@ -34,12 +36,10 @@ export async function POST(req: NextRequest) {
         const blob = new Blob([buffer], { type: file.type });
         uploadFormData.append("file", blob, file.name);
 
-        if (uploadPreset) {
-          uploadFormData.append("upload_preset", uploadPreset);
-        } else if (apiKey && apiSecret) {
+        if (apiKey && apiSecret) {
           const timestamp = Math.round(Date.now() / 1000).toString();
           const folder = "iem_kids_fashion_week";
-          
+
           // Generate SHA-1 signature for Cloudinary
           const stringToSign = `folder=${folder}&timestamp=${timestamp}${apiSecret}`;
           const signature = crypto.createHash("sha1").update(stringToSign).digest("hex");
@@ -48,6 +48,8 @@ export async function POST(req: NextRequest) {
           uploadFormData.append("timestamp", timestamp);
           uploadFormData.append("folder", folder);
           uploadFormData.append("signature", signature);
+        } else if (uploadPreset) {
+          uploadFormData.append("upload_preset", uploadPreset);
         }
 
         const cloudRes = await fetch(cloudinaryUrl, {
@@ -65,14 +67,28 @@ export async function POST(req: NextRequest) {
             storage: "cloudinary",
           });
         } else {
-          console.warn("Cloudinary upload returned error, using fallback:", cloudData);
+          cloudinaryError =
+            cloudData.error?.message || `Cloudinary upload failed (${cloudRes.status}).`;
+          console.error("Cloudinary upload returned an error:", cloudinaryError);
         }
       } catch (err) {
-        console.error("Cloudinary upload failed, falling back to local:", err);
+        cloudinaryError = err instanceof Error ? err.message : "Cloudinary request failed.";
+        console.error("Cloudinary upload failed:", err);
       }
     }
 
-    // 2. Safe local upload fallback (if Cloudinary is not yet filled in .env)
+    if (process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        {
+          error:
+            cloudinaryError ||
+            "Cloudinary is not configured. Set CLOUDINARY_CLOUD_NAME and either CLOUDINARY_API_KEY/CLOUDINARY_API_SECRET or a valid unsigned CLOUDINARY_UPLOAD_PRESET.",
+        },
+        { status: cloudinaryError ? 502 : 503 }
+      );
+    }
+
+    // 2. Use local storage only during development; serverless filesystems are ephemeral/read-only.
     const uploadsDir = path.join(process.cwd(), "public", "uploads");
     if (!fs.existsSync(uploadsDir)) {
       fs.mkdirSync(uploadsDir, { recursive: true });
