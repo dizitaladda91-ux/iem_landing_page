@@ -402,7 +402,13 @@ export default function AdminPortal() {
         body: formData,
       });
 
-      const data = await res.json();
+      const responseText = await res.text();
+      let data: any = null;
+      try {
+        data = responseText ? JSON.parse(responseText) : null;
+      } catch {
+        throw new Error("Server returned a non-JSON upload response.");
+      }
       if (res.ok && data.url) {
         setCandidateForm((prev) => ({ ...prev, imageUrl: data.url }));
         setUploadMessage(

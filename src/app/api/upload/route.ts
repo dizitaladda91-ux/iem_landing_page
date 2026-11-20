@@ -18,6 +18,14 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No image file provided." }, { status: 400 });
     }
 
+    if (!file.type.startsWith("image/")) {
+      return NextResponse.json({ error: "Only image files are allowed." }, { status: 400 });
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json({ error: "Image size must be 10 MB or less." }, { status: 413 });
+    }
+
     const cloudName = process.env.CLOUDINARY_CLOUD_NAME || process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
     const apiKey = process.env.CLOUDINARY_API_KEY;
     const apiSecret = process.env.CLOUDINARY_API_SECRET;
@@ -57,18 +65,30 @@ export async function POST(req: NextRequest) {
           body: uploadFormData,
         });
 
-        const cloudData = await cloudRes.json();
+        const responseText = await cloudRes.text();
+        let cloudData: any = null;
 
-        if (cloudRes.ok && cloudData.secure_url) {
+        try {
+          cloudData = responseText ? JSON.parse(responseText) : null;
+        } catch {
+          const htmlPreview = responseText.replace(/\s+/g, " ").trim().slice(0, 180);
+          cloudinaryError =
+            htmlPreview ||
+            `Cloudinary returned an invalid response (${cloudRes.status}).`;
+          console.error("Cloudinary returned non-JSON response:", cloudinaryError);
+        }
+
+        if (cloudRes.ok && cloudData?.secure_url) {
           return NextResponse.json({
             success: true,
             url: cloudData.secure_url,
             publicId: cloudData.public_id,
             storage: "cloudinary",
           });
-        } else {
+        } else if (!cloudinaryError) {
           cloudinaryError =
-            cloudData.error?.message || `Cloudinary upload failed (${cloudRes.status}).`;
+            cloudData?.error?.message ||
+            `Cloudinary upload failed (${cloudRes.status}).`;
           console.error("Cloudinary upload returned an error:", cloudinaryError);
         }
       } catch (err) {

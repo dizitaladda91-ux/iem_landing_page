@@ -26,22 +26,6 @@ export function isNeonConfigured(): boolean {
 }
 
 /**
- * Parse host and password from postgres connection string
- */
-function parseNeonUrl(connStr: string): { host: string; pass: string; dbName: string } {
-  try {
-    const url = new URL(connStr);
-    return {
-      host: url.host,
-      pass: decodeURIComponent(url.password || ""),
-      dbName: url.pathname.replace(/^\//, "") || "neondb",
-    };
-  } catch {
-    return { host: "", pass: "", dbName: "" };
-  }
-}
-
-/**
  * Execute raw SQL query against Neon Postgres
  */
 export async function queryNeon<T = any>(sql: string, params: any[] = []): Promise<T[]> {
@@ -49,50 +33,21 @@ export async function queryNeon<T = any>(sql: string, params: any[] = []): Promi
     throw new Error("Neon DATABASE_URL is not configured.");
   }
 
-  // 1. Try official @neondatabase/serverless package if installed
   try {
-    // Dynamic import to avoid crash if package not installed yet
     const { neon } = require("@neondatabase/serverless");
     const sqlExecutor = neon(DATABASE_URL);
-    
-    // Convert parameterized query $1, $2 to array parameters
     const rows = await sqlExecutor(sql, params);
     return rows as T[];
-  } catch (err: any) {
-    // If package not found, fallback to Neon's native HTTP SQL API
-    if (err.code !== "MODULE_NOT_FOUND" && !err.message?.includes("Cannot find module")) {
-      console.warn("Neon driver error, trying direct HTTP fallback:", err.message);
-    }
+  } catch (error: any) {
+    throw new Error(`Neon database query failed: ${error?.message || String(error)}`);
   }
+}
 
-  // 2. Direct HTTP SQL fetch endpoint provided by Neon Serverless
-  const { host, pass } = parseNeonUrl(DATABASE_URL);
-  if (!host) {
-    throw new Error("Invalid Neon connection string.");
+async function executeNeonStatements(statements: string[]): Promise<void> {
+  for (const statement of statements) {
+    const sql = statement.trim();
+    if (sql) await queryNeon(`${sql};`);
   }
-
-  const endpoint = `https://${host}/sql`;
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${pass}`,
-      "Neon-Connection-String": DATABASE_URL,
-    },
-    body: JSON.stringify({
-      query: sql,
-      params,
-    }),
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Neon HTTP query error (${response.status}): ${text}`);
-  }
-
-  const data = await response.json();
-  return (data.rows || []) as T[];
 }
 
 /**
@@ -103,7 +58,7 @@ export async function initNeonDatabase(): Promise<boolean> {
 
   try {
     // Create candidates table
-    await queryNeon(`
+    await executeNeonStatements(`
       CREATE TABLE IF NOT EXISTS candidates (
         id VARCHAR(50) PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -120,10 +75,10 @@ export async function initNeonDatabase(): Promise<boolean> {
         created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
       CREATE INDEX IF NOT EXISTS idx_candidates_active_votes ON candidates(is_active, votes DESC);
-    `);
+    `.split(";"));
 
     // Create vote_records table
-    await queryNeon(`
+    await executeNeonStatements(`
       CREATE TABLE IF NOT EXISTS vote_records (
         id VARCHAR(100) PRIMARY KEY,
         contestant_id VARCHAR(50) REFERENCES candidates(id) ON DELETE CASCADE,
@@ -149,10 +104,10 @@ export async function initNeonDatabase(): Promise<boolean> {
       CREATE UNIQUE INDEX IF NOT EXISTS idx_vote_unique_device
         ON vote_records(contestant_id, device_id)
         WHERE device_id IS NOT NULL AND device_id <> '';
-    `);
+    `.split(";"));
 
     // Create audit_logs table
-    await queryNeon(`
+    await executeNeonStatements(`
       CREATE TABLE IF NOT EXISTS audit_logs (
         id VARCHAR(100) PRIMARY KEY,
         timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
@@ -164,17 +119,17 @@ export async function initNeonDatabase(): Promise<boolean> {
         ip VARCHAR(100)
       );
       CREATE INDEX IF NOT EXISTS idx_audit_logs_timestamp ON audit_logs(timestamp DESC);
-    `);
+    `.split(";"));
 
     // Create revoked_tokens table (for immediate session end on logout)
-    await queryNeon(`
+    await executeNeonStatements(`
       CREATE TABLE IF NOT EXISTS revoked_tokens (
         jti VARCHAR(100) PRIMARY KEY,
         exp BIGINT NOT NULL,
         revoked_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
       CREATE INDEX IF NOT EXISTS idx_revoked_exp ON revoked_tokens(exp);
-    `);
+    `.split(";"));
 
     // Populate in-memory revoked tokens cache from Neon
     const revoked = await queryNeon(`SELECT jti FROM revoked_tokens WHERE exp > $1;`, [
