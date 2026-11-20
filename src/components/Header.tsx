@@ -30,7 +30,7 @@ export default function Header() {
               </span>
               <span className="mx-5 text-pink-primary font-black text-sm">&bull;</span>
               <span className="text-xs sm:text-xs font-bold uppercase tracking-wider text-charcoal">
-                NOMINATIONS OPEN TILL 14 NOV &bull; MEGA AUDITIONS @ GD GOENKA &amp; JASHN REALTY (22 NOV) &bull; GRAND FINALE (29 NOV) &bull; CASH PRIZE ₹11,000 WITH GIFT HAMPER
+                NOMINATIONS OPEN TILL 14 NOV &bull; MEGA AUDITIONS @ JASHN ELEVATE, LUCKNOW (22 NOV) &bull; GRAND FINALE (29 NOV) &bull; CASH PRIZE ₹11,000 WITH GIFT HAMPER
               </span>
               <span className="mx-5 text-pink-primary font-black text-sm">&bull;</span>
             </div>
