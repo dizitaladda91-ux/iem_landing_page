@@ -66,7 +66,7 @@ const AGE_PRESETS = [
   "4 - 5 Yrs (Kindergarten)",
   "6 - 7 Yrs (Class 1-2)",
   "8 - 9 Yrs (Class 3-4)",
-  "10 - 12 Yrs (Junior)",
+  "11 - 15 Yrs (Junior)",
 ];
 
 const BADGES = [

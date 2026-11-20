@@ -56,7 +56,7 @@ const categories: CategoryDetail[] = [
     id: "cat-3",
     categoryNumber: "CATEGORY 03",
     title: "Groomed Fashion Walk + Designer Showcase",
-    ageGroup: "Class 4 – Class 5 (Approx. 9 – 11 Years)",
+    ageGroup: "Junior Division (Approx. 11 – 15 Years)",
     partnerInfo: "Solo Participant",
     description:
       "A sophisticated runway round featuring curated designer collections. Kids receive intensive stage grooming, posture refinement, and runway pacing training.",

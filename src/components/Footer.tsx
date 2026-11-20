@@ -98,7 +98,7 @@ export default function Footer() {
               </li>
               <li>
                 <strong className="text-charcoal block">Category 3:</strong>
-                Class 4 – Class 5 Designer Showcase
+                Junior Division (11–15 Yrs) Designer Showcase
               </li>
               <li>
                 <strong className="text-charcoal block">Category 4:</strong>
