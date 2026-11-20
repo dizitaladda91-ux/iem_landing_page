@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
+import { randomUUID } from "node:crypto";
 import { recordVote } from "@/lib/dataStore";
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { contestantId, voterName, voterPhone, voterEmail, voterCity } = body;
+    const { contestantId, voterName, voterPhone, voterEmail, voterCity, deviceId } = body;
+    const cookieDeviceId = req.cookies.get("iem_voter_device_id")?.value || "";
+    const lockedDeviceId =
+      cookieDeviceId ||
+      (typeof deviceId === "string" && deviceId.trim()) ||
+      randomUUID();
 
     if (!contestantId) {
       return NextResponse.json({ error: "Contestant ID is required." }, { status: 400 });
@@ -37,7 +43,22 @@ export async function POST(req: NextRequest) {
 
     // Get client IP for logging
     const forwardedFor = req.headers.get("x-forwarded-for");
-    const ip = forwardedFor ? forwardedFor.split(",")[0].trim() : "127.0.0.1";
+    const ip =
+      req.headers.get("cf-connecting-ip") ||
+      req.headers.get("x-real-ip") ||
+      (forwardedFor ? forwardedFor.split(",")[0].trim() : "") ||
+      "127.0.0.1";
+
+    const withDeviceCookie = (response: NextResponse) => {
+      response.cookies.set("iem_voter_device_id", lockedDeviceId, {
+        path: "/",
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 365,
+        secure: process.env.NODE_ENV === "production",
+      });
+      return response;
+    };
 
     const result = await recordVote({
       contestantId,
@@ -46,18 +67,23 @@ export async function POST(req: NextRequest) {
       voterEmail: trimmedEmail,
       voterCity: voterCity || "Lucknow",
       ip,
+      deviceId: lockedDeviceId,
     });
 
     if (!result.success) {
-      return NextResponse.json({ error: result.error }, { status: 409 });
+      return withDeviceCookie(
+        NextResponse.json({ error: result.error }, { status: 409 })
+      );
     }
 
-    return NextResponse.json({
-      success: true,
-      message: `Vote successfully recorded for ${result.candidate?.name}!`,
-      candidate: result.candidate,
-      voteId: result.vote?.id,
-    });
+    return withDeviceCookie(
+      NextResponse.json({
+        success: true,
+        message: `Vote successfully recorded for ${result.candidate?.name}!`,
+        candidate: result.candidate,
+        voteId: result.vote?.id,
+      })
+    );
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Failed to process vote." }, { status: 500 });
   }

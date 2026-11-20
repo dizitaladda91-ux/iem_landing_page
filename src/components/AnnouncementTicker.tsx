@@ -82,10 +82,17 @@ const sponsors = [
   },
   {
     role: "Supporting Partner",
-    name: "Nutri Max",
+    name: "NUTRI MIX",
     sub: "Health & Nutrition",
     badgeColor: "bg-[#8D7B38] text-white border-[#A8946C]",
     nameColor: "text-[#73632A]",
+  },
+  {
+    role: "Automobile Partner",
+    name: "BMW",
+    sub: "Automotive Partner",
+    badgeColor: "bg-[#1C69D4] text-white border-[#69A2DB]",
+    nameColor: "text-[#1C69D4]",
   },
   {
     role: "Event Partner",

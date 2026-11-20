@@ -41,6 +41,7 @@ export interface VoteRecord {
   voterEmail: string;
   voterCity?: string;
   ip?: string;
+  deviceId?: string;
   timestamp: string;
 }
 
@@ -367,10 +368,11 @@ export async function recordVote(params: {
   voterEmail: string;
   voterCity?: string;
   ip?: string;
+  deviceId?: string;
 }): Promise<{ success: boolean; error?: string; candidate?: Candidate; vote?: VoteRecord }> {
-  const { contestantId, voterName, voterPhone, voterEmail, voterCity, ip } = params;
+  const { contestantId, voterName, voterPhone, voterEmail, voterCity, ip, deviceId } = params;
 
-  const phone = voterPhone ? voterPhone.trim().replace(/\s+/g, "") : "";
+  const phone = voterPhone ? voterPhone.trim().replace(/\D/g, "").slice(-10) : "";
   const email = voterEmail ? voterEmail.trim().toLowerCase() : "";
   const name = voterName ? voterName.trim() : "Supporter";
 
@@ -381,7 +383,7 @@ export async function recordVote(params: {
   // Check duplicate vote
   if (isNeonConfigured()) {
     try {
-      const alreadyVoted = await checkNeonDuplicateVote(contestantId, phone, email);
+      const alreadyVoted = await checkNeonDuplicateVote(contestantId, phone, email, deviceId || "", ip || "");
       if (alreadyVoted) {
         return {
           success: false,
@@ -404,10 +406,22 @@ export async function recordVote(params: {
         voterEmail: email,
         voterCity: voterCity || "Lucknow",
         ip: ip || "",
+        deviceId: deviceId || "",
         timestamp: new Date().toISOString(),
       };
 
-      await recordNeonVote(newVote);
+      try {
+        await recordNeonVote(newVote);
+      } catch (err: any) {
+        const message = String(err?.message || err);
+        if (message.includes("idx_vote_unique_phone") || message.includes("idx_vote_unique_email") || message.includes("duplicate key")) {
+          return {
+            success: false,
+            error: `You have already cast your vote for this contestant using ${phone || email}. As per fair play rules, only 1 vote per verified contact is permitted per contestant.`,
+          };
+        }
+        throw err;
+      }
       candidate.votes += 1;
       candidate.likes += 1;
 
@@ -430,9 +444,14 @@ export async function recordVote(params: {
   const allVotes = getLocalVotes();
   const alreadyVoted = allVotes.some((v) => {
     const sameChild = v.contestantId === contestantId;
-    const samePhone = phone && v.voterPhone && v.voterPhone.replace(/\s+/g, "") === phone;
+    const samePhone =
+      phone &&
+      v.voterPhone &&
+      v.voterPhone.replace(/\D/g, "").slice(-10) === phone;
     const sameEmail = email && v.voterEmail && v.voterEmail.toLowerCase() === email;
-    return sameChild && (samePhone || sameEmail);
+    const sameDevice = deviceId && v.deviceId && v.deviceId === deviceId;
+    const sameIp = ip && v.ip && v.ip !== "127.0.0.1" && v.ip === ip;
+    return sameChild && (samePhone || sameEmail || sameDevice || sameIp);
   });
 
   if (alreadyVoted) {
@@ -461,6 +480,7 @@ export async function recordVote(params: {
     voterEmail: email,
     voterCity: voterCity || "Lucknow",
     ip: ip || "",
+    deviceId: deviceId || "",
     timestamp: new Date().toISOString(),
   };
 

@@ -197,7 +197,10 @@ export default function Footer() {
                 Steppingstone
               </span>
               <span className="text-xs font-bold text-[#73632A] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
-                Nutri Mix
+                NUTRI MIX
+              </span>
+              <span className="text-xs font-bold text-[#1C69D4] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
+                BMW <span className="text-[10px] font-normal text-charcoal-muted">• Automobile Partner</span>
               </span>
               <span className="text-xs font-bold text-[#0B63C5] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
                 AdOnMo+

@@ -44,6 +44,25 @@ const SAMPLE_AVATARS = [
 ];
 
 export default function WildCardVotingSection() {
+  const getOrCreateVoterDeviceId = () => {
+    try {
+      const existing = localStorage.getItem("iem_voter_device_id");
+      if (existing) {
+        document.cookie = `iem_voter_device_id=${encodeURIComponent(existing)}; path=/; max-age=31536000; SameSite=Lax`;
+        return existing;
+      }
+      const deviceId =
+        typeof crypto !== "undefined" && "randomUUID" in crypto
+          ? crypto.randomUUID()
+          : `VOTER-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+      localStorage.setItem("iem_voter_device_id", deviceId);
+      document.cookie = `iem_voter_device_id=${encodeURIComponent(deviceId)}; path=/; max-age=31536000; SameSite=Lax`;
+      return deviceId;
+    } catch {
+      return "";
+    }
+  };
+
   const [contestants, setContestants] = useState<ContestantVote[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -123,6 +142,18 @@ export default function WildCardVotingSection() {
   // Open the voter verification modal
   const handleOpenVoteModal = (child: ContestantVote) => {
     setFormError(null);
+    try {
+      const votedContestants = JSON.parse(
+        localStorage.getItem("iem_voted_contestants") || "[]"
+      );
+      if (Array.isArray(votedContestants) && votedContestants.includes(child.id)) {
+        setVoteSuccessChild(child.name);
+        setActiveChildForVote(null);
+        return;
+      }
+    } catch {
+      // Server-side duplicate protection remains authoritative.
+    }
     setActiveChildForVote(child);
   };
 
@@ -158,12 +189,24 @@ export default function WildCardVotingSection() {
           voterPhone: trimmedPhone,
           voterEmail: trimmedEmail,
           voterCity: voterForm.city,
+          deviceId: getOrCreateVoterDeviceId(),
         }),
       });
 
       const data = await res.json();
 
       if (res.ok && data.success) {
+        try {
+          const rawVotedContestants = localStorage.getItem("iem_voted_contestants") || "[]";
+          const votedContestants = JSON.parse(rawVotedContestants);
+          const contestantIds = Array.isArray(votedContestants) ? votedContestants : [];
+          localStorage.setItem(
+            "iem_voted_contestants",
+            JSON.stringify(Array.from(new Set([...contestantIds, activeChildForVote.id])))
+          );
+        } catch {
+          // Browser storage is optional; server-side duplicate protection remains authoritative.
+        }
         // Increment vote count locally
         setContestants((prev) =>
           prev.map((c) =>
@@ -303,7 +346,7 @@ export default function WildCardVotingSection() {
               Engagement Scoring Formula
             </h3>
             <p className="text-xs text-charcoal-muted leading-relaxed">
-              Total Score = (Verified Votes &times; 10) + (Post Likes &times; 2) + (Valid Shares &times; 5). Duplicate votes are auto-filtered.
+              Total Score = (Verified Votes &times; 10) + (Post Likes &times; 2) + (Valid Shares &times; 5). One vote per contestant is locked per device and network/IP.
             </p>
           </div>
 

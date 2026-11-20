@@ -133,11 +133,22 @@ export async function initNeonDatabase(): Promise<boolean> {
         voter_email VARCHAR(255),
         voter_city VARCHAR(100),
         ip VARCHAR(100),
+        device_id VARCHAR(100),
         timestamp TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
+      ALTER TABLE vote_records ADD COLUMN IF NOT EXISTS device_id VARCHAR(100);
       CREATE INDEX IF NOT EXISTS idx_vote_contestant ON vote_records(contestant_id);
       CREATE INDEX IF NOT EXISTS idx_vote_voter_phone ON vote_records(voter_phone);
       CREATE INDEX IF NOT EXISTS idx_vote_voter_email ON vote_records(voter_email);
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_vote_unique_phone
+        ON vote_records(contestant_id, voter_phone)
+        WHERE voter_phone IS NOT NULL AND voter_phone <> '';
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_vote_unique_email
+        ON vote_records(contestant_id, LOWER(voter_email))
+        WHERE voter_email IS NOT NULL AND voter_email <> '';
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_vote_unique_device
+        ON vote_records(contestant_id, device_id)
+        WHERE device_id IS NOT NULL AND device_id <> '';
     `);
 
     // Create audit_logs table
@@ -318,8 +329,8 @@ export async function getNeonVotes(): Promise<VoteRecord[]> {
 export async function recordNeonVote(vote: VoteRecord): Promise<void> {
   await initNeonDatabase();
   await queryNeon(
-    `INSERT INTO vote_records (id, contestant_id, contestant_name, voter_name, voter_phone, voter_email, voter_city, ip, timestamp)
-     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW());`,
+    `INSERT INTO vote_records (id, contestant_id, contestant_name, voter_name, voter_phone, voter_email, voter_city, ip, device_id, timestamp)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW());`,
     [
       vote.id,
       vote.contestantId,
@@ -329,6 +340,7 @@ export async function recordNeonVote(vote: VoteRecord): Promise<void> {
       vote.voterEmail,
       vote.voterCity,
       vote.ip,
+      vote.deviceId,
     ]
   );
 
@@ -341,18 +353,24 @@ export async function recordNeonVote(vote: VoteRecord): Promise<void> {
 export async function checkNeonDuplicateVote(
   contestantId: string,
   phone: string,
-  email: string
+  email: string,
+  deviceId: string = "",
+  ip: string = ""
 ): Promise<boolean> {
   await initNeonDatabase();
+  const normalizedPhone = phone ? phone.replace(/\D/g, "").slice(-10) : "";
+  const normalizedEmail = email ? email.trim().toLowerCase() : "";
   const rows = await queryNeon(
     `SELECT id FROM vote_records 
      WHERE contestant_id = $1 
        AND (
-         ($2 <> '' AND voter_phone = $2) OR 
-         ($3 <> '' AND LOWER(voter_email) = LOWER($3))
+         ($2 <> '' AND voter_phone <> '' AND RIGHT(REGEXP_REPLACE(voter_phone, '[^0-9]', '', 'g'), 10) = $2) OR 
+         ($3 <> '' AND LOWER(voter_email) = LOWER($3)) OR
+         ($4 <> '' AND device_id = $4) OR
+         ($5 <> '' AND ip = $5)
        )
      LIMIT 1;`,
-    [contestantId, phone || "", email || ""]
+    [contestantId, normalizedPhone, normalizedEmail, deviceId, ip]
   );
   return rows.length > 0;
 }
