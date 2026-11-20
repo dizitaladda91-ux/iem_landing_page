@@ -85,7 +85,7 @@ export default function RegistrationFormSection() {
                   LIVE REGISTRATION FORM &bull; FREE ENTRY TILL 14 NOV
                 </span>
                 <span className="text-[11px] hidden sm:inline">
-                  Mega Auditions: 22 Nov 2026 @ Jashn Realty &amp; GD Goenka
+                  Mega Auditions: 22 Nov 2026 @ Jashn Elevate, Lucknow
                 </span>
               </div>
 
@@ -240,7 +240,7 @@ export default function RegistrationFormSection() {
               <div className="mt-8 pt-6 border-t border-border-pink flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-charcoal-muted">
                 <div className="text-center sm:text-left">
                   <span className="font-bold text-charcoal block">Mega Auditions &amp; Screening:</span>
-                  <span>22 Nov 2026 @ Jashn Realty &amp; GD Goenka Public School</span>
+                  <span>22 Nov 2026 @ Jashn Elevate, Lucknow</span>
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3">

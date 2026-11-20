@@ -26,19 +26,19 @@ const steps: ScheduleStep[] = [
     step: "02",
     date: "22ND NOV. 2026",
     title: "Batch Collection for Mega Audition",
-    location: "GD Goenka Public School, Lucknow",
+    location: "Jashn Elevate, Lucknow",
     description:
-      "Batch collection and stage assembly for all registered candidates at GD Goenka Public School before the mega on-ground audition rounds.",
-    tags: ["22 NOV", "GD GOENKA", "BATCH COLLECTION"],
+      "Batch collection and stage assembly for all registered candidates at Jashn Elevate before the mega on-ground audition rounds.",
+    tags: ["22 NOV", "JASHN ELEVATE", "BATCH COLLECTION"],
   },
   {
     step: "03",
     date: "22ND NOV. 2026",
-    title: "MEGA AUDITION @ Jashn Realty",
-    location: "Jashn Realty, Lucknow",
+    title: "MEGA AUDITION @ Jashn Elevate",
+    location: "Jashn Elevate, Lucknow",
     description:
       "On-ground auditions to select finalists for Runway – Kids Fashion Week. Friendly, encouraging screening with stage walk, smile, and intro.",
-    tags: ["22 NOV", "MEGA AUDITION", "JASHN REALTY"],
+    tags: ["22 NOV", "MEGA AUDITION", "JASHN ELEVATE"],
   },
   {
     step: "04",
@@ -71,7 +71,7 @@ const steps: ScheduleStep[] = [
     step: "07",
     date: "29TH NOV. 2026",
     title: "GRAND FINALE: Walk | Create | Shine",
-    location: "The Centrum, Lucknow",
+    location: "Lucknow",
     description:
       "The ultimate celebration! Finalist kids take the grand runway before a celebrity jury, VIP guests, brand leaders, and media cameras.",
     tags: ["29 NOV", "GRAND FINALE", "WALK CREATE SHINE"],
@@ -117,7 +117,7 @@ export default function ScheduleFlowSection() {
               Official Event Flow &amp; Dates: 14th Nov to 29th Nov 2026
             </span>
             <span className="text-charcoal-muted font-medium">
-              Auditions @ GD Goenka &amp; Jashn Realty &bull; Finale @ The Centrum
+              Auditions @ Jashn Elevate &bull; Finale in Lucknow
             </span>
           </div>
         </div>

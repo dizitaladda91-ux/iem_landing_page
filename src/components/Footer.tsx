@@ -169,14 +169,8 @@ export default function Footer() {
               <span className="text-xs font-bold text-black bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
                 VAULT <span className="text-[10px] font-normal text-charcoal-muted">by Virat Kohli</span>
               </span>
-              <span className="text-xs font-bold text-[#102A6B] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
-                GD Goenka School
-              </span>
               <span className="text-xs font-bold text-[#3B2F2A] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
                 AJB Fine Jewels
-              </span>
-              <span className="text-xs font-bold text-[#6B5A39] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
-                The Centrum Lucknow
               </span>
               <span className="text-xs font-bold text-[#0C2D49] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
                 Amrut Vichar

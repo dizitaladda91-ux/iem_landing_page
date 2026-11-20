@@ -19,24 +19,10 @@ const sponsors = [
   },
   {
     role: "Co-Powered By",
-    name: "GD Goenka School",
-    sub: "Lucknow",
-    badgeColor: "bg-[#102A6B] text-white border-blue-900",
-    nameColor: "text-[#102A6B]",
-  },
-  {
-    role: "Co-Powered By",
     name: "AJB Fine Jewels",
     sub: "Luxury Jewellery",
     badgeColor: "bg-[#F4E5C8] text-[#3B2F2A] border-[#D3B77A]",
     nameColor: "text-[#3B2F2A]",
-  },
-  {
-    role: "Hospitality Partner",
-    name: "The Centrum",
-    sub: "Lucknow • Hotel | Resort | Convention",
-    badgeColor: "bg-[#8C7853] text-white border-[#A8946C]",
-    nameColor: "text-[#6B5A39]",
   },
   {
     role: "Media & Knowledge Partner",
@@ -125,14 +111,14 @@ const sponsors = [
   {
     role: "Mega Auditions",
     name: "22nd Nov 2026",
-    sub: "GD Goenka & Jashn Realty",
+    sub: "Jashn Elevate, Lucknow",
     badgeColor: "bg-gold text-[#0A1440] border-gold-dark",
     nameColor: "text-[#0A1440]",
   },
   {
     role: "Grand Finale",
     name: "29th Nov 2026",
-    sub: "The Centrum, Lucknow",
+    sub: "Lucknow",
     badgeColor: "bg-[#0A1440] text-gold border-gold",
     nameColor: "text-[#0A1440]",
   },

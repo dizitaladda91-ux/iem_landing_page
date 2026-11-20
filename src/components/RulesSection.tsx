@@ -11,8 +11,8 @@ export default function RulesSection() {
       a: "Initial nominations are completely free of charge. Parents can submit their child's details online till 14th November without any registration cost.",
     },
     {
-      q: "What happens during the Mega Auditions on 22nd November at Jashn Realty & GD Goenka?",
-      a: "The audition is designed to be child-friendly, playful, and comfortable. Batch assembly is at GD Goenka, followed by on-ground screening at Jashn Realty. Trainers evaluate basic ramp presence, smiles, and self-introduction. It is an encouraging shortlisting round, not a stressful elimination.",
+      q: "What happens during the Mega Auditions on 22nd November at Jashn Elevate?",
+      a: "The audition is designed to be child-friendly, playful, and comfortable. Candidates will attend on-ground screening at Jashn Elevate. Trainers evaluate basic ramp presence, smiles, and self-introduction. It is an encouraging shortlisting round, not a stressful elimination.",
     },
     {
       q: "How does the Social Media Wild Card Voting work?",

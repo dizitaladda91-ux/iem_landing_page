@@ -315,7 +315,7 @@ export default function WildCardVotingSection() {
               Top Wild Card Selection
             </h3>
             <p className="text-xs text-charcoal-muted leading-relaxed">
-              The highest scoring boy &amp; girl from each age bracket secure a guaranteed wild card ramp walk at The Centrum on 22nd Nov.
+              The highest scoring boy &amp; girl from each age bracket secure a guaranteed wild card ramp walk at the Grand Finale.
             </p>
           </div>
         </div>

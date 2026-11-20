@@ -12,7 +12,7 @@ export default function HeroSection() {
   });
 
   useEffect(() => {
-    // Target: Mega Audition Nov 22, 2026 @ Jashn Realty & GD Goenka
+    // Target: Mega Audition Nov 22, 2026 @ Jashn Elevate
     const targetDate = new Date("2026-11-22T10:00:00").getTime();
 
     const interval = setInterval(() => {
@@ -146,7 +146,7 @@ export default function HeroSection() {
                 </div>
                 <div className="text-left sm:text-right">
                   <span className="text-xs font-bold text-charcoal block">22 Nov 2026</span>
-                  <span className="text-[11px] font-medium text-charcoal-muted">Jashn Realty &amp; GD Goenka</span>
+                  <span className="text-[11px] font-medium text-charcoal-muted">Jashn Elevate, Lucknow</span>
                 </div>
               </div>
 
@@ -198,7 +198,7 @@ export default function HeroSection() {
                     02
                   </span>
                   <div className="text-xs text-charcoal leading-tight">
-                    <strong className="font-bold">Mega Auditions (22 Nov):</strong> Batch assembly @ GD Goenka &amp; on-ground auditions @ Jashn Realty.
+                    <strong className="font-bold">Mega Auditions (22 Nov):</strong> On-ground auditions @ Jashn Elevate, Lucknow.
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
@@ -206,7 +206,7 @@ export default function HeroSection() {
                     03
                   </span>
                   <div className="text-xs text-charcoal leading-tight">
-                    <strong className="font-bold">Grand Finale (29 Nov):</strong> Finalist runway showcase @ The Centrum Lucknow.
+                    <strong className="font-bold">Grand Finale (29 Nov):</strong> Finalist runway showcase in Lucknow.
                   </div>
                 </div>
               </div>
