@@ -106,6 +106,24 @@ export async function initNeonDatabase(): Promise<boolean> {
         WHERE device_id IS NOT NULL AND device_id <> '';
     `.split(";"));
 
+    await executeNeonStatements(`
+      CREATE TABLE IF NOT EXISTS device_vote_locks (
+        device_id VARCHAR(100) PRIMARY KEY,
+        contestant_id VARCHAR(50) NOT NULL,
+        vote_id VARCHAR(100) NOT NULL,
+        locked_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      )
+    `.split(";"));
+
+    await queryNeon(`
+      INSERT INTO device_vote_locks (device_id, contestant_id, vote_id, locked_at)
+      SELECT DISTINCT ON (device_id) device_id, contestant_id, id, timestamp
+      FROM vote_records
+      WHERE device_id IS NOT NULL AND device_id <> ''
+      ORDER BY device_id, timestamp ASC
+      ON CONFLICT (device_id) DO NOTHING;
+    `);
+
     // Create audit_logs table
     await executeNeonStatements(`
       CREATE TABLE IF NOT EXISTS audit_logs (
@@ -305,6 +323,35 @@ export async function recordNeonVote(vote: VoteRecord): Promise<void> {
   ]);
 }
 
+export async function claimNeonDeviceVote(
+  deviceId: string,
+  contestantId: string,
+  voteId: string
+): Promise<boolean> {
+  await initNeonDatabase();
+  const rows = await queryNeon(
+    `INSERT INTO device_vote_locks (device_id, contestant_id, vote_id)
+     VALUES ($1, $2, $3)
+     ON CONFLICT (device_id) DO NOTHING
+     RETURNING device_id;`,
+    [deviceId, contestantId, voteId]
+  );
+  return rows.length > 0;
+}
+
+export async function releaseNeonDeviceVoteClaim(
+  deviceId: string,
+  voteId: string
+): Promise<void> {
+  await initNeonDatabase();
+  await queryNeon(
+    `DELETE FROM device_vote_locks
+     WHERE device_id = $1 AND vote_id = $2
+       AND NOT EXISTS (SELECT 1 FROM vote_records WHERE id = $2);`,
+    [deviceId, voteId]
+  );
+}
+
 export async function checkNeonDuplicateVote(
   contestantId: string,
   phone: string,
@@ -317,13 +364,14 @@ export async function checkNeonDuplicateVote(
   const normalizedEmail = email ? email.trim().toLowerCase() : "";
   const rows = await queryNeon(
     `SELECT id FROM vote_records 
-     WHERE contestant_id = $1 
+     WHERE (
+       contestant_id = $1
        AND (
-         ($2 <> '' AND voter_phone <> '' AND RIGHT(REGEXP_REPLACE(voter_phone, '[^0-9]', '', 'g'), 10) = $2) OR 
+         ($2 <> '' AND voter_phone <> '' AND RIGHT(REGEXP_REPLACE(voter_phone, '[^0-9]', '', 'g'), 10) = $2) OR
          ($3 <> '' AND LOWER(voter_email) = LOWER($3)) OR
-         ($4 <> '' AND device_id = $4) OR
          ($5 <> '' AND ip = $5)
        )
+     ) OR ($4 <> '' AND device_id = $4)
      LIMIT 1;`,
     [contestantId, normalizedPhone, normalizedEmail, deviceId, ip]
   );

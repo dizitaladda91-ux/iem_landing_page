@@ -8,6 +8,8 @@ import {
   deleteNeonCandidate,
   getNeonVotes,
   recordNeonVote,
+  claimNeonDeviceVote,
+  releaseNeonDeviceVoteClaim,
   checkNeonDuplicateVote,
   getNeonAuditLogs,
   addNeonAuditLog,
@@ -410,14 +412,31 @@ export async function recordVote(params: {
         timestamp: new Date().toISOString(),
       };
 
+      if (deviceId) {
+        const deviceVoteClaimed = await claimNeonDeviceVote(
+          deviceId,
+          contestantId,
+          newVote.id
+        );
+        if (!deviceVoteClaimed) {
+          return {
+            success: false,
+            error: "This device has already voted. Each device can vote for only one contestant.",
+          };
+        }
+      }
+
       try {
         await recordNeonVote(newVote);
       } catch (err: any) {
+        if (deviceId) {
+          await releaseNeonDeviceVoteClaim(deviceId, newVote.id);
+        }
         const message = String(err?.message || err);
         if (message.includes("idx_vote_unique_phone") || message.includes("idx_vote_unique_email") || message.includes("duplicate key")) {
           return {
             success: false,
-            error: `You have already cast your vote for this contestant using ${phone || email}. As per fair play rules, only 1 vote per verified contact is permitted per contestant.`,
+            error: "This device or verified contact has already voted. Each device can vote for only one contestant.",
           };
         }
         throw err;
@@ -436,7 +455,11 @@ export async function recordVote(params: {
 
       return { success: true, candidate, vote: newVote };
     } catch (err) {
-      console.error("Neon recordVote error, using local fallback:", err);
+      console.error("Neon recordVote error:", err);
+      return {
+        success: false,
+        error: "We could not verify your vote right now. Please try again shortly.",
+      };
     }
   }
 
@@ -451,13 +474,15 @@ export async function recordVote(params: {
     const sameEmail = email && v.voterEmail && v.voterEmail.toLowerCase() === email;
     const sameDevice = deviceId && v.deviceId && v.deviceId === deviceId;
     const sameIp = ip && v.ip && v.ip !== "127.0.0.1" && v.ip === ip;
-    return sameChild && (samePhone || sameEmail || sameDevice || sameIp);
+    return (sameChild && (samePhone || sameEmail || sameIp)) || sameDevice;
   });
 
   if (alreadyVoted) {
     return {
       success: false,
-      error: `You have already cast your vote for this contestant using ${phone || email}. As per fair play rules, only 1 vote per verified contact is permitted per contestant.`,
+      error: deviceId && allVotes.some((v) => v.deviceId === deviceId)
+        ? "This device has already voted. Each device can vote for only one contestant."
+        : `You have already cast your vote for this contestant using ${phone || email}. As per fair play rules, only 1 vote per verified contact is permitted per contestant.`,
     };
   }
 

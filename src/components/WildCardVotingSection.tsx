@@ -146,8 +146,8 @@ export default function WildCardVotingSection() {
       const votedContestants = JSON.parse(
         localStorage.getItem("iem_voted_contestants") || "[]"
       );
-      if (Array.isArray(votedContestants) && votedContestants.includes(child.id)) {
-        setVoteSuccessChild(child.name);
+      if (Array.isArray(votedContestants) && votedContestants.length > 0) {
+        setVoteSuccessChild("You have already voted from this device");
         setActiveChildForVote(null);
         return;
       }
