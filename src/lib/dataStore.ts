@@ -11,6 +11,7 @@ import {
   claimNeonDeviceVote,
   releaseNeonDeviceVoteClaim,
   checkNeonDuplicateVote,
+  checkNeonVoteEligibility,
   getNeonAuditLogs,
   addNeonAuditLog,
   clearNeonAuditLogs,
@@ -382,14 +383,20 @@ export async function recordVote(params: {
     return { success: false, error: "Please enter your Mobile Number or Email to cast your verified vote." };
   }
 
-  // Check duplicate vote
+  // Strict 3-step check: 1. Phone -> 2. Email -> 3. Device (Laptop / Mobile)
   if (isNeonConfigured()) {
     try {
-      const alreadyVoted = await checkNeonDuplicateVote(contestantId, phone, email, deviceId || "", ip || "");
-      if (alreadyVoted) {
+      const eligibility = await checkNeonVoteEligibility({
+        contestantId,
+        phone,
+        email,
+        deviceId: deviceId || "",
+      });
+
+      if (!eligibility.allowed) {
         return {
           success: false,
-          error: `You have already cast your vote for this contestant using ${phone || email}. As per fair play rules, only 1 vote per verified contact is permitted per contestant.`,
+          error: eligibility.error,
         };
       }
 
@@ -421,7 +428,7 @@ export async function recordVote(params: {
         if (!deviceVoteClaimed) {
           return {
             success: false,
-            error: "This device has already voted. Each device can vote for only one contestant.",
+            error: "⚠️ Is device (mobile/laptop) se pehle hi vote diya ja chuka hai. Fair Play rules ke mutabiq, 1 device se sirf 1 hi vote allow hai.",
           };
         }
       }
@@ -433,10 +440,22 @@ export async function recordVote(params: {
           await releaseNeonDeviceVoteClaim(deviceId, newVote.id);
         }
         const message = String(err?.message || err);
-        if (message.includes("idx_vote_unique_phone") || message.includes("idx_vote_unique_email") || message.includes("duplicate key")) {
+        if (message.includes("idx_vote_unique_phone")) {
           return {
             success: false,
-            error: "This device or verified contact has already voted. Each device can vote for only one contestant.",
+            error: `⚠️ Yeh mobile number (${phone}) pehle hi vote cast karne ke liye use ho chuka hai.`,
+          };
+        }
+        if (message.includes("idx_vote_unique_email")) {
+          return {
+            success: false,
+            error: `⚠️ Yeh email address (${email}) pehle hi vote cast karne ke liye use ho chuka hai.`,
+          };
+        }
+        if (message.includes("idx_vote_unique_device") || message.includes("device_vote_locks") || message.includes("duplicate key")) {
+          return {
+            success: false,
+            error: "⚠️ Is device (mobile/laptop) se pehle hi vote diya ja chuka hai.",
           };
         }
         throw err;
@@ -463,27 +482,46 @@ export async function recordVote(params: {
     }
   }
 
-  // Local fallback
+  // Local fallback: Strict 3-step check: 1. Phone -> 2. Email -> 3. Device
   const allVotes = getLocalVotes();
-  const alreadyVoted = allVotes.some((v) => {
-    const sameChild = v.contestantId === contestantId;
-    const samePhone =
-      phone &&
-      v.voterPhone &&
-      v.voterPhone.replace(/\D/g, "").slice(-10) === phone;
-    const sameEmail = email && v.voterEmail && v.voterEmail.toLowerCase() === email;
-    const sameDevice = deviceId && v.deviceId && v.deviceId === deviceId;
-    const sameIp = ip && v.ip && v.ip !== "127.0.0.1" && v.ip === ip;
-    return (sameChild && (samePhone || sameEmail || sameIp)) || sameDevice;
-  });
+  const normalizedPhone = phone ? phone.replace(/\D/g, "").slice(-10) : "";
+  const normalizedEmail = email ? email.trim().toLowerCase() : "";
 
-  if (alreadyVoted) {
-    return {
-      success: false,
-      error: deviceId && allVotes.some((v) => v.deviceId === deviceId)
-        ? "This device has already voted. Each device can vote for only one contestant."
-        : `You have already cast your vote for this contestant using ${phone || email}. As per fair play rules, only 1 vote per verified contact is permitted per contestant.`,
-    };
+  // 1. Phone check
+  if (normalizedPhone) {
+    const existing = allVotes.find(
+      (v) => v.voterPhone && v.voterPhone.replace(/\D/g, "").slice(-10) === normalizedPhone
+    );
+    if (existing) {
+      return {
+        success: false,
+        error: `⚠️ Yeh mobile number (${phone}) pehle hi vote cast karne ke liye use ho chuka hai${existing.contestantName ? ` (${existing.contestantName} ke liye)` : ""}. Fair Play rules ke mutabiq, 1 mobile number se sirf 1 hi vote allow hai.`,
+      };
+    }
+  }
+
+  // 2. Email check
+  if (normalizedEmail) {
+    const existing = allVotes.find(
+      (v) => v.voterEmail && v.voterEmail.trim().toLowerCase() === normalizedEmail
+    );
+    if (existing) {
+      return {
+        success: false,
+        error: `⚠️ Yeh email address (${email}) pehle hi vote cast karne ke liye use ho chuka hai${existing.contestantName ? ` (${existing.contestantName} ke liye)` : ""}. Fair Play rules ke mutabiq, 1 email se sirf 1 hi vote allow hai.`,
+      };
+    }
+  }
+
+  // 3. Device check
+  if (deviceId) {
+    const existing = allVotes.find((v) => v.deviceId && v.deviceId === deviceId);
+    if (existing) {
+      return {
+        success: false,
+        error: `⚠️ Is device (mobile/laptop) se pehle hi vote diya ja chuka hai. Fair Play rules ke mutabiq, 1 device se sirf 1 hi vote allow hai.`,
+      };
+    }
   }
 
   const localCandidates = getLocalCandidates();

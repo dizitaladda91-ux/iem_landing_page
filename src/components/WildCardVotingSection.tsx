@@ -46,9 +46,15 @@ const SAMPLE_AVATARS = [
 export default function WildCardVotingSection() {
   const getOrCreateVoterDeviceId = () => {
     try {
-      const existing = localStorage.getItem("iem_voter_device_id");
+      let existing = localStorage.getItem("iem_voter_device_id");
       if (existing) {
         document.cookie = `iem_voter_device_id=${encodeURIComponent(existing)}; path=/; max-age=31536000; SameSite=Lax`;
+        return existing;
+      }
+      const cookieMatch = typeof document !== "undefined" ? document.cookie.match(/iem_voter_device_id=([^;]+)/) : null;
+      if (cookieMatch && cookieMatch[1]) {
+        existing = decodeURIComponent(cookieMatch[1]);
+        localStorage.setItem("iem_voter_device_id", existing);
         return existing;
       }
       const deviceId =

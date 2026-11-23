@@ -352,30 +352,114 @@ export async function releaseNeonDeviceVoteClaim(
   );
 }
 
+export interface VoteEligibilityResult {
+  allowed: boolean;
+  error?: string;
+  step?: "PHONE" | "EMAIL" | "DEVICE";
+}
+
+/**
+ * Strict 3-step verification as per Fair Play rules:
+ * 1. Phele Phone Number Check (1 vote per mobile number)
+ * 2. Phir Email Check (1 vote per email)
+ * 3. Phir Device Check (1 vote per device - laptop ho ya mobile)
+ * NOTE: IP is logged for security audits only, NEVER used to block voters.
+ */
+export async function checkNeonVoteEligibility(params: {
+  contestantId: string;
+  phone: string;
+  email: string;
+  deviceId?: string;
+}): Promise<VoteEligibilityResult> {
+  await initNeonDatabase();
+  const normalizedPhone = params.phone ? params.phone.replace(/\D/g, "").slice(-10) : "";
+  const normalizedEmail = params.email ? params.email.trim().toLowerCase() : "";
+  const deviceId = (params.deviceId || "").trim();
+
+  // 1. PHELE PHONE NUMBER CHECK
+  if (normalizedPhone) {
+    const phoneRows = await queryNeon(
+      `SELECT contestant_name FROM vote_records 
+       WHERE voter_phone <> '' 
+         AND RIGHT(REGEXP_REPLACE(voter_phone, '[^0-9]', '', 'g'), 10) = $1
+       LIMIT 1;`,
+      [normalizedPhone]
+    );
+    if (phoneRows.length > 0) {
+      const contestantName = phoneRows[0].contestant_name;
+      return {
+        allowed: false,
+        step: "PHONE",
+        error: `⚠️ Yeh mobile number (${params.phone}) pehle hi vote cast karne ke liye use ho chuka hai${contestantName ? ` (${contestantName} ke liye)` : ""}. Fair Play rules ke mutabiq, 1 mobile number se sirf 1 hi vote allow hai.`,
+      };
+    }
+  }
+
+  // 2. PHIR EMAIL CHECK
+  if (normalizedEmail) {
+    const emailRows = await queryNeon(
+      `SELECT contestant_name FROM vote_records 
+       WHERE voter_email <> '' 
+         AND LOWER(voter_email) = $1
+       LIMIT 1;`,
+      [normalizedEmail]
+    );
+    if (emailRows.length > 0) {
+      const contestantName = emailRows[0].contestant_name;
+      return {
+        allowed: false,
+        step: "EMAIL",
+        error: `⚠️ Yeh email address (${params.email}) pehle hi vote cast karne ke liye use ho chuka hai${contestantName ? ` (${contestantName} ke liye)` : ""}. Fair Play rules ke mutabiq, 1 email se sirf 1 hi vote allow hai.`,
+      };
+    }
+  }
+
+  // 3. PHIR DEVICE CHECK (Laptop ya Mobile)
+  if (deviceId) {
+    // Check in device_vote_locks
+    const lockRows = await queryNeon(
+      `SELECT contestant_id FROM device_vote_locks WHERE device_id = $1 LIMIT 1;`,
+      [deviceId]
+    );
+    if (lockRows.length > 0) {
+      return {
+        allowed: false,
+        step: "DEVICE",
+        error: `⚠️ Is device (laptop/mobile) se pehle hi vote diya ja chuka hai. Fair Play rules ke mutabiq, 1 device se sirf 1 hi vote allow hai.`,
+      };
+    }
+
+    // Check in vote_records
+    const deviceVoteRows = await queryNeon(
+      `SELECT contestant_name FROM vote_records WHERE device_id <> '' AND device_id = $1 LIMIT 1;`,
+      [deviceId]
+    );
+    if (deviceVoteRows.length > 0) {
+      return {
+        allowed: false,
+        step: "DEVICE",
+        error: `⚠️ Is device (laptop/mobile) se pehle hi vote diya ja chuka hai. Fair Play rules ke mutabiq, 1 device se sirf 1 hi vote allow hai.`,
+      };
+    }
+  }
+
+  return { allowed: true };
+}
+
 export async function checkNeonDuplicateVote(
   contestantId: string,
   phone: string,
   email: string,
   deviceId: string = "",
-  ip: string = ""
+  _ip: string = ""
 ): Promise<boolean> {
-  await initNeonDatabase();
-  const normalizedPhone = phone ? phone.replace(/\D/g, "").slice(-10) : "";
-  const normalizedEmail = email ? email.trim().toLowerCase() : "";
-  const rows = await queryNeon(
-    `SELECT id FROM vote_records 
-     WHERE (
-       contestant_id = $1
-       AND (
-         ($2 <> '' AND voter_phone <> '' AND RIGHT(REGEXP_REPLACE(voter_phone, '[^0-9]', '', 'g'), 10) = $2) OR
-         ($3 <> '' AND LOWER(voter_email) = LOWER($3)) OR
-         ($5 <> '' AND ip = $5)
-       )
-     ) OR ($4 <> '' AND device_id = $4)
-     LIMIT 1;`,
-    [contestantId, normalizedPhone, normalizedEmail, deviceId, ip]
-  );
-  return rows.length > 0;
+  const result = await checkNeonVoteEligibility({
+    contestantId,
+    phone,
+    email,
+    deviceId,
+  });
+  return !result.allowed;
 }
 
 // -------------------------------------------------------------

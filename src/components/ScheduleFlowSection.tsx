@@ -42,30 +42,30 @@ const steps: ScheduleStep[] = [
   },
   {
     step: "04",
-    date: "24TH & 25TH NOV. 2026",
+    date: "COMING SOON",
     title: "Portfolio Photoshoot",
     location: "Professional Studio Setup, Lucknow",
     description:
       "A special high-fashion portfolio opportunity for all selected finalist kids. Kids receive high-resolution model portfolios and brand face features.",
-    tags: ["24 & 25 NOV", "PORTFOLIO SHOOT", "FINALIST EXCLUSIVE"],
+    tags: ["COMING SOON", "PORTFOLIO SHOOT", "FINALIST EXCLUSIVE"],
   },
   {
     step: "05",
-    date: "26TH & 27TH NOV. 2026",
+    date: "COMING SOON",
     title: "Rehearsals & Preparation",
     location: "Choreography Arena, Lucknow",
     description:
       "Choreography & on-stage rehearsals with mentors. Children learn synchronization, posture, runway confidence, and group coordination.",
-    tags: ["26 & 27 NOV", "STAGE CHOREOGRAPHY", "MENTOR TRAINING"],
+    tags: ["COMING SOON", "STAGE CHOREOGRAPHY", "MENTOR TRAINING"],
   },
   {
     step: "06",
-    date: "28TH NOV. 2026",
+    date: "COMING SOON",
     title: "Makeup Guidance Session",
     location: "Grand Finale Green Rooms",
     description:
       "Session with a professional makeup artist using kid-safe, gentle, organic cosmetic styling products and camera-ready prep.",
-    tags: ["28 NOV", "PROFESSIONAL MAKEUP", "SKIN-SAFE STYLING"],
+    tags: ["COMING SOON", "PROFESSIONAL MAKEUP", "SKIN-SAFE STYLING"],
   },
   {
     step: "07",
@@ -114,7 +114,7 @@ export default function ScheduleFlowSection() {
           <div className="p-3.5 bg-surface-card border-t border-border-pink flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
             <span className="font-bold text-pink-primary flex items-center gap-1.5">
               <span className="w-2 h-2 rounded-full bg-gold animate-pulse" />
-              Official Event Flow &amp; Dates: 14th Nov to 29th Nov 2026
+              Official Event Flow: Grand Finale 29th Nov 2026 (Portfolio &amp; Prep Coming Soon)
             </span>
             <span className="text-charcoal-muted font-medium">
               Auditions @ Jashn Elevate &bull; Finale in Lucknow

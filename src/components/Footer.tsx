@@ -184,9 +184,6 @@ export default function Footer() {
               <span className="text-xs font-bold text-[#E60012] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
                 Yakult
               </span>
-              <span className="text-xs font-bold text-[#D62300] bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
-                Burger King
-              </span>
               <span className="text-xs font-bold text-zinc-900 bg-white px-2.5 py-1 rounded border border-border-pink shadow-2xs">
                 Lakmé Academy
               </span>

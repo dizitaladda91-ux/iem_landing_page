@@ -60,13 +60,6 @@ const sponsors = [
     nameColor: "text-[#E60012]",
   },
   {
-    role: "Supporting Partner",
-    name: "Burger King",
-    sub: "Taste is King",
-    badgeColor: "bg-[#D62300] text-amber-200 border-amber-500",
-    nameColor: "text-[#D62300]",
-  },
-  {
     role: "Associate Partner",
     name: "Mezbaan",
     sub: "All Events",
