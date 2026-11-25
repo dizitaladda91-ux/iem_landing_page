@@ -1,16 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
-import { recordVote } from "@/lib/dataStore";
+import { recordVote, IS_VOTING_CLOSED } from "@/lib/dataStore";
 
 export async function POST(req: NextRequest) {
   // Official Voting Closed Guard
-  return NextResponse.json(
-    {
-      error: "⚠️ Online voting for Runway Kids Fashion Week is now officially closed. Thank you to everyone who participated! Final results will be announced at the Grand Finale on 29th November 2026.",
-      isVotingClosed: true,
-    },
-    { status: 403 }
-  );
+  if (IS_VOTING_CLOSED) {
+    return NextResponse.json(
+      {
+        error: "⚠️ Online voting for Runway Kids Fashion Week is now officially closed. Thank you to everyone who participated! Final results will be announced at the Grand Finale on 29th November 2026.",
+        isVotingClosed: true,
+      },
+      { status: 403 }
+    );
+  }
 
   try {
     const body = await req.json();
@@ -50,12 +52,12 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Get client IP for logging
-    const forwardedFor = req.headers.get("x-forwarded-for");
+    // Get client IP for logging safely
+    const forwardedFor = req.headers.get("x-forwarded-for") || "";
     const ip =
       req.headers.get("cf-connecting-ip") ||
       req.headers.get("x-real-ip") ||
-      (forwardedFor ? forwardedFor.split(",")[0].trim() : "") ||
+      (forwardedFor ? forwardedFor.split(",")[0]?.trim() || "" : "") ||
       "127.0.0.1";
 
     const withDeviceCookie = (response: NextResponse) => {
