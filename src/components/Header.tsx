@@ -26,7 +26,7 @@ export default function Header() {
                 JASHN REALTY &bull; LUCKNOW 2026
               </span>
               <span className="text-xs sm:text-xs font-bold uppercase tracking-wider text-pink-dark">
-                JASHN REALTY PRESENTS RUNWAY KIDS FASHION WEEK 2026 — OFFICIAL REGISTRATIONS &amp; SOCIAL VOTING OPEN
+                JASHN REALTY PRESENTS RUNWAY KIDS FASHION WEEK 2026 — ONLINE VOTING OFFICIALLY CLOSED &bull; GRAND FINALE 29 NOV
               </span>
               <span className="mx-5 text-pink-primary font-black text-sm">&bull;</span>
               <span className="text-xs sm:text-xs font-bold uppercase tracking-wider text-charcoal">
@@ -84,9 +84,10 @@ export default function Header() {
             </a>
             <a
               href="#voting"
-              className="text-[11px] xl:text-xs font-bold text-charcoal hover:text-pink-primary uppercase tracking-wider whitespace-nowrap transition-colors"
+              className="text-[11px] xl:text-xs font-bold text-charcoal hover:text-pink-primary uppercase tracking-wider whitespace-nowrap transition-colors flex items-center gap-1"
             >
-              Wild Card Voting
+              <span>Voting</span>
+              <span className="text-[9px] text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.2 rounded font-extrabold">Closed</span>
             </a>
             <a
               href="#wheels"
@@ -106,9 +107,10 @@ export default function Header() {
           <div className="hidden md:flex items-center gap-2 xl:gap-2.5 shrink-0">
             <a
               href="#voting"
-              className="px-3 xl:px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-wider text-pink-primary bg-surface border border-gold hover:bg-pink-soft transition-all rounded-md whitespace-nowrap shadow-sm"
+              className="px-3 xl:px-3.5 py-2 text-[11px] font-extrabold uppercase tracking-wider text-charcoal bg-surface border border-gold hover:bg-pink-soft transition-all rounded-md whitespace-nowrap shadow-sm flex items-center gap-1"
             >
-              View Voting
+              <span>Voting Closed</span>
+              <span>🔒</span>
             </a>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLScLhiYtE6aWKlI-T3tou7OzfVQVucW4uxHgf8Q7P5bLI4JKLw/viewform"

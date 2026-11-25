@@ -3,6 +3,15 @@ import { randomUUID } from "node:crypto";
 import { recordVote } from "@/lib/dataStore";
 
 export async function POST(req: NextRequest) {
+  // Official Voting Closed Guard
+  return NextResponse.json(
+    {
+      error: "⚠️ Online voting for Runway Kids Fashion Week is now officially closed. Thank you to everyone who participated! Final results will be announced at the Grand Finale on 29th November 2026.",
+      isVotingClosed: true,
+    },
+    { status: 403 }
+  );
+
   try {
     const body = await req.json();
     const { contestantId, voterName, voterPhone, voterEmail, voterCity, deviceId } = body;

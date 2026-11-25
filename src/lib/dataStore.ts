@@ -361,6 +361,8 @@ export async function getVotes(): Promise<VoteRecord[]> {
   return getLocalVotes();
 }
 
+export const IS_VOTING_CLOSED = true;
+
 /**
  * Record a verified vote
  */
@@ -373,6 +375,13 @@ export async function recordVote(params: {
   ip?: string;
   deviceId?: string;
 }): Promise<{ success: boolean; error?: string; candidate?: Candidate; vote?: VoteRecord }> {
+  if (IS_VOTING_CLOSED) {
+    return {
+      success: false,
+      error: "⚠️ Online voting is now officially closed. Thank you for your support!",
+    };
+  }
+
   const { contestantId, voterName, voterPhone, voterEmail, voterCity, ip, deviceId } = params;
 
   const phone = voterPhone ? voterPhone.trim().replace(/\D/g, "").slice(-10) : "";

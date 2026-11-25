@@ -894,6 +894,11 @@ export default function AdminPortal() {
           </div>
 
           <div className="flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-rose-50 text-rose-700 border border-rose-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+              Voting Closed 🔒
+            </span>
+
             {stats && (
               <span className="hidden md:inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold bg-surface border border-border-pink text-charcoal-muted">
                 <span>{stats.dbMode}</span>

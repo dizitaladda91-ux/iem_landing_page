@@ -43,6 +43,8 @@ const SAMPLE_AVATARS = [
   { label: "Fashion Smile", url: "/images/category-2.jpg" },
 ];
 
+const IS_VOTING_CLOSED = true;
+
 export default function WildCardVotingSection() {
   const getOrCreateVoterDeviceId = () => {
     try {
@@ -147,6 +149,10 @@ export default function WildCardVotingSection() {
 
   // Open the voter verification modal
   const handleOpenVoteModal = (child: ContestantVote) => {
+    if (IS_VOTING_CLOSED) {
+      setVoteSuccessChild("Voting has now officially closed. Results will be announced at the Grand Finale on 29th Nov 2026.");
+      return;
+    }
     setFormError(null);
     try {
       const votedContestants = JSON.parse(
@@ -392,6 +398,39 @@ export default function WildCardVotingSection() {
           </div>
         )}
 
+        {/* Official Voting Closed Announcement Banner */}
+        <div className="mb-10 p-5 sm:p-6 bg-gradient-to-r from-amber-50 via-rose-50/40 to-amber-50 border-2 border-gold/70 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-5 shadow-sm">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-gold/20 border border-gold/50 flex items-center justify-center text-2xl shrink-0 shadow-inner">
+              🔒
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-2 mb-1">
+                <span className="text-[10px] font-black uppercase tracking-widest text-gold-dark bg-gold/15 px-2.5 py-0.5 rounded-full border border-gold/30">
+                  OFFICIAL UPDATE &bull; VOTING CONCLUDED
+                </span>
+                <span className="text-[10px] font-bold text-rose-700 bg-rose-100/80 px-2 py-0.5 rounded-full border border-rose-200">
+                  VOTING CLOSED
+                </span>
+              </div>
+              <h4 className="font-serif text-base sm:text-lg font-bold text-charcoal">
+                Online Voting Has Officially Closed
+              </h4>
+              <p className="text-xs sm:text-sm text-charcoal-muted mt-0.5 leading-relaxed">
+                Thank you to all parents, mentors, and voters for the tremendous response! All verified votes 
+                are locked for official audit and final tallying. Wild card winners will be unveiled at the 
+                <strong className="text-charcoal font-bold"> Grand Finale on 29th November 2026</strong>.
+              </p>
+            </div>
+          </div>
+          <div className="shrink-0 flex items-center gap-2">
+            <span className="px-4 py-2 text-xs font-black uppercase tracking-wider text-charcoal bg-white border border-border-pink rounded-full shadow-2xs flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
+              Tallying in Progress
+            </span>
+          </div>
+        </div>
+
         {/* Live Contestant Directory Search & Voting Card Grid */}
         <div className="bg-white border-2 border-border-pink rounded-2xl p-5 sm:p-8 shadow-sm">
           
@@ -400,31 +439,25 @@ export default function WildCardVotingSection() {
             <div>
               <div className="flex items-center gap-2">
                 <span className="text-[10px] font-extrabold uppercase tracking-widest text-pink-primary bg-pink-soft px-2.5 py-1 rounded">
-                  LIVE CONTESTANT DIRECTORY
+                  OFFICIAL CONTESTANT DIRECTORY
                 </span>
                 <span className="text-xs font-bold text-charcoal-muted">
                   {filteredContestants.length} Contestants Active
                 </span>
               </div>
               <h3 className="font-serif text-xl sm:text-2xl font-bold text-charcoal mt-1">
-                Search, Nominate &amp; Vote for Contestants
+                Contestants &amp; Final Verified Tallies
               </h3>
               <p className="text-xs text-charcoal-muted">
-                Search child by Name or ID, or click &ldquo;Nominate Child&rdquo; to add a new voting card instantly.
+                Voting is closed. You can explore registered contestants and their final verified scores below.
               </p>
             </div>
 
             <div className="flex flex-wrap items-center gap-2.5">
-              <button
-                onClick={() => {
-                  setNominateError(null);
-                  setIsNominateModalOpen(true);
-                }}
-                className="px-4 py-2.5 text-xs font-black uppercase tracking-wider text-pink-primary bg-pink-soft border border-pink-primary hover:bg-pink-primary hover:text-white rounded-full transition-all shadow-sm cursor-pointer flex items-center gap-1.5"
-              >
-                <span>✨</span>
-                <span>Nominate Child for Voting</span>
-              </button>
+              <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-charcoal-muted bg-surface border border-border-pink rounded-full flex items-center gap-1.5 shadow-2xs">
+                <span>🔒</span>
+                <span>Nominations &amp; Voting Closed</span>
+              </div>
 
               <a
                 href="https://docs.google.com/forms/d/e/1FAIpQLScLhiYtE6aWKlI-T3tou7OzfVQVucW4uxHgf8Q7P5bLI4JKLw/viewform"
@@ -614,13 +647,14 @@ export default function WildCardVotingSection() {
                     </div>
                   </div>
 
-                  {/* Vote Action Button */}
+                  {/* Vote Action Button - Closed */}
                   <button
-                    onClick={() => handleOpenVoteModal(child)}
-                    className="w-full py-2.5 text-xs font-extrabold uppercase tracking-widest rounded-xl bg-pink-primary hover:bg-pink-dark text-white active:scale-95 transition-all shadow-sm cursor-pointer flex items-center justify-center gap-1.5"
+                    disabled
+                    className="w-full py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl bg-charcoal/5 border border-charcoal/15 text-charcoal-muted/80 cursor-not-allowed flex items-center justify-center gap-1.5 shadow-none select-none"
+                    title="Online voting has officially closed."
                   >
-                    <span>Vote for {child.name.split(" ")[0]}</span>
-                    <span>🗳️</span>
+                    <span>Voting Closed</span>
+                    <span>🔒</span>
                   </button>
                 </div>
               ))}
@@ -630,8 +664,8 @@ export default function WildCardVotingSection() {
           {/* Fair play policy notice */}
           <div className="mt-8 pt-6 border-t border-border-pink flex flex-col sm:flex-row items-center justify-between text-xs text-charcoal-muted gap-4">
             <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>Fair Play System &bull; 1 Verified Vote per Contestant via Mobile/Email</span>
+              <span className="w-2 h-2 rounded-full bg-rose-500" />
+              <span className="font-semibold text-charcoal">Official Voting Period Concluded &bull; Audit &amp; Result Compilation Underway</span>
             </div>
             <div className="font-semibold text-charcoal">
               Organized by Institute of Event Management &amp; AdOnMo
